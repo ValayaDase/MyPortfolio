@@ -3,7 +3,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-
+import GlobalCursor from "@/components/GlobalCursor";
 import PreLoader from "@/components/PreLoader";
 import Navbar from "@/components/Navbar";
 
@@ -22,12 +22,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${mono.variable} scroll-smooth`}>
       <body className="bg-[#0a0a0a] text-white antialiased overflow-x-hidden">
-        
+
+        {/* global cursor */}
+        <GlobalCursor />
+
         <AnimatePresence mode="wait">
           {isLoading && (
-            <PreLoader 
-              key="loader" 
-              onComplete={handleLoadingComplete} 
+            <PreLoader
+              key="loader"
+              onComplete={handleLoadingComplete}
             />
           )}
         </AnimatePresence>
@@ -37,9 +40,9 @@ export default function RootLayout({ children }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ 
-                duration: 1.2, 
-                ease: [0.22, 1, 0.36, 1] // Custom Cubic Bezier for premium feel
+            transition={{
+              duration: 1.2,
+              ease: [0.22, 1, 0.36, 1] // Custom Cubic Bezier for premium feel
             }}
           >
             <Navbar />

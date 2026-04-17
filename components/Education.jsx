@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { MeshDistortMaterial, Sphere, PerspectiveCamera, Float } from "@react-three/drei";
-import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -65,6 +64,11 @@ export default function Education() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // 🚀 FIX: Delaying the calculation allows About.jsx to fully setup its pin spacer first
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 500);
+
     let ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -74,8 +78,14 @@ export default function Education() {
           pin: true,
           scrub: 1,
           pinSpacing: true,
+          preventOverlaps: true, // 🚀 Prevents clashing with About.jsx
+          fastScrollEnd: true,
+          anticipatePin: 1 // 🚀 Makes the pinning ultra-smooth without jumping
         }
       });
+
+      // 🚀 Tiny buffer: Wait for a split second after pinning before animating
+      tl.to({}, { duration: 0.15 });
 
       // 1. Title Animation: Blur to Clear (Top Row)
       tl.fromTo(".edu-char", 
@@ -107,13 +117,16 @@ export default function Education() {
 
     }, sectionRef);
 
-    return () => ctx.revert();
+    return () => {
+      clearTimeout(timer);
+      ctx.revert();
+    };
   }, []);
 
   const title = "Learning Path.".split(" ");
 
   return (
-    <div ref={sectionRef} className="relative w-full bg-[#030303] overflow-hidden">
+    <div ref={sectionRef} className="relative w-full bg-[#030303] overflow-hidden z-[60]">
       
       {/* Background Visuals */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
@@ -127,9 +140,9 @@ export default function Education() {
         </Canvas>
       </div>
 
-      <section className="relative h-screen w-full flex flex-col items-center justify-center px-10 lg:px-24">
+      <section className="relative h-screen w-full flex flex-col items-center justify-center px-6 md:px-10 lg:px-24">
         
-        <div className="relative z-10 w-full max-w-7xl flex flex-col gap-16 md:gap-24">
+        <div className="relative z-10 w-full max-w-7xl flex flex-col gap-12 md:gap-24">
           
           {/* Top Row: Title */}
           <div className="w-full flex flex-col items-start md:items-center text-left md:text-center">
@@ -150,7 +163,7 @@ export default function Education() {
           </div>
 
           {/* Bottom Row: Horizontal Glide Cards */}
-          <div ref={cardsContainerRef} className="flex flex-wrap md:flex-nowrap items-center justify-center gap-6 w-full">
+          <div ref={cardsContainerRef} className="flex flex-col md:flex-row flex-wrap md:flex-nowrap items-center justify-center gap-6 w-full">
             {educationData.map((edu, index) => (
               <div 
                 key={index} 

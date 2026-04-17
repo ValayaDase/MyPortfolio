@@ -24,3 +24,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* 1. Hide default cursor globally */
+* {
+  cursor: none !important;
+}
+
+/* 2. Ensure cursor works on interactive elements */
+a, button {
+  cursor: none !important;
+}

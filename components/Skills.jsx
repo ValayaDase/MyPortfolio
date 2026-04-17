@@ -10,7 +10,7 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-// Seamless Three.js Background to match other sections
+// Seamless Three.js Background
 function AmbientBackground() {
   const meshRef = useRef(null);
   useFrame(() => {
@@ -37,14 +37,21 @@ function AmbientBackground() {
   );
 }
 
-const skillsData = [
-  { name: "React", icon: "/react.png", level: "Expert", shadow: "#61DAFB" },
-  { name: "Next.js", icon: "/next.png", level: "Advanced", shadow: "#ffffff" },
-  { name: "Node.js", icon: "/node.png", level: "Intermediate", shadow: "#339933" },
-  { name: "MongoDB", icon: "/mongo.png", level: "Intermediate", shadow: "#47A248" },
-  { name: "Python", icon: "/python.png", level: "Advanced", shadow: "#3776AB" },
-  { name: "Java", icon: "/java.png", level: "Expert", shadow: "#007396" },
-  { name: "Tailwind", icon: "/tailwind.png", level: "Expert", shadow: "#06B6D4" },
+// Divided Data into 2 Sections
+const frontendSkills = [
+  { name: "React", icon: "/react.png", shadow: "#61DAFB" },
+  { name: "Next.js", icon: "/next.png", shadow: "#ffffff" },
+  { name: "Tailwind", icon: "/tailwind.png", shadow: "#06B6D4" },
+  { name: "HTML/CSS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg", shadow: "#E34F26" },
+  { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg", shadow: "#F7DF1E" },
+];
+
+const backendSkills = [
+  { name: "Node.js", icon: "/node.png", shadow: "#339933" },
+  { name: "MongoDB", icon: "/mongo.png", shadow: "#47A248" },
+  { name: "Python", icon: "/python.png", shadow: "#3776AB" },
+  { name: "Java", icon: "/java.png", shadow: "#007396" },
+  { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg", shadow: "#336791" },
 ];
 
 export default function Skills() {
@@ -54,50 +61,49 @@ export default function Skills() {
     if (typeof window === "undefined") return;
 
     let ctx = gsap.context(() => {
-      // 1. PINNING MASTER TIMELINE
+      // 🚀 NO PINNING, Natural Scroll Animation
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top top",
-          end: "+=200%",
-          pin: true,
-          scrub: 1,
-          pinSpacing: true,
-          anticipatePin: 1,
+          start: "top 80%", // Trigger when section is 20% visible
+          // play on enter, reverse on leave back (vapas scroll karne pe jayega)
+          toggleActions: "play none none reverse", 
         }
       });
 
-      // 2. TITLE REVEAL (Top Row)
+      // 1. TITLE REVEAL
       tl.fromTo(".skill-char", 
-        { y: "100%", opacity: 0, filter: "blur(12px)", rotateX: -30 },
-        { 
-          y: "0%", 
-          opacity: 1, 
-          filter: "blur(0px)", 
-          rotateX: 0, 
-          stagger: 0.02, 
-          duration: 1, 
-          ease: "power3.out" 
-        }
-      );
-
-      // 3. GRID REVEAL (GSAP Outer Container Entrance)
-      tl.fromTo(".skill-card-container",
-        { y: 80, opacity: 0, filter: "blur(10px)", scale: 0.9 },
+        { y: 50, opacity: 0, filter: "blur(8px)", rotateX: -30 },
         { 
           y: 0, 
           opacity: 1, 
           filter: "blur(0px)", 
-          scale: 1,
-          stagger: {
-            each: 0.1,
-            from: "start",
-            grid: "auto"
-          }, 
-          duration: 1.2, 
-          ease: "back.out(1.2)" 
-        },
+          rotateX: 0, 
+          stagger: 0.02, 
+          duration: 0.8, 
+          ease: "power3.out" 
+        }
+      )
+      
+      // 2. SHORT DESCRIPTION (Comes from Top)
+      .fromTo(".skill-desc",
+        { y: -40, opacity: 0, filter: "blur(5px)" },
+        { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" },
         "-=0.5"
+      )
+
+      // 3. LEFT SECTION (Comes from Left)
+      .fromTo(".skill-left",
+        { x: -100, opacity: 0 },
+        { x: 0, opacity: 1, duration: 1, ease: "power3.out" },
+        "-=0.6"
+      )
+
+      // 4. RIGHT SECTION (Comes from Right)
+      .fromTo(".skill-right",
+        { x: 100, opacity: 0 },
+        { x: 0, opacity: 1, duration: 1, ease: "power3.out" },
+        "-=0.8" // Starts almost together with left
       );
 
     }, sectionRef);
@@ -105,10 +111,10 @@ export default function Skills() {
     return () => ctx.revert();
   }, []);
 
-  const title = "Skills & Tools.".split(" ");
+  const title = "Tech Arsenal.".split(" ");
 
   return (
-    <div ref={sectionRef} className="relative w-full bg-[#030303] overflow-hidden">
+    <div ref={sectionRef} className="relative w-full bg-[#030303] overflow-hidden min-h-screen py-24 z-20 border-t border-white/5">
       
       {/* Background Visuals */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
@@ -122,84 +128,75 @@ export default function Skills() {
         </Canvas>
       </div>
 
-      <section className="relative h-screen w-full flex flex-col items-center justify-center px-6 lg:px-24">
+      <section className="relative z-10 w-full max-w-6xl mx-auto px-6 lg:px-12 flex flex-col gap-12 md:gap-20">
         
-        <div className="relative z-10 w-full max-w-7xl flex flex-col gap-12 md:gap-20 items-center">
+        {/* Top Area: Header & Description */}
+        <div className="w-full flex flex-col items-start text-left max-w-3xl">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="h-[1px] w-8 bg-blue-500/50" />
+            <span className="font-mono text-blue-500 text-[10px] uppercase tracking-[0.5em] opacity-80">
+                // 03. Skills
+            </span>
+          </div>
           
-          {/* Top Row: Title (Centered) */}
-          <div className="flex flex-col items-center justify-center text-center">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="h-[1px] w-8 md:w-12 bg-blue-500/50" />
-              <span className="font-mono text-blue-500 text-[10px] uppercase tracking-[0.5em] opacity-80">
-                  // 03. Tech Ecosystem
+          <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-white mb-8">
+            {title.map((word, i) => (
+              <span key={i} className="inline-block mr-[0.3em] overflow-hidden py-2">
+                <span className="skill-char inline-block">{word}</span>
               </span>
-              <div className="h-[1px] w-8 md:w-12 bg-blue-500/50" />
-            </div>
-            
-            <h2 className="text-5xl md:text-7xl lg:text-[7rem] font-black tracking-tighter leading-none text-white">
-              {title.map((word, i) => (
-                <span key={i} className="inline-block mr-[0.3em] overflow-hidden py-2">
-                  <span className="skill-char inline-block">{word}</span>
-                </span>
+            ))}
+          </h2>
+
+          <p className="skill-desc text-white/60 text-lg md:text-2xl font-light leading-relaxed">
+            I build full stack websites that combine <span className="text-white font-medium">smooth user experiences</span> with <span className="text-white font-medium">reliable backend performance</span>.
+          </p>
+        </div>
+
+        {/* Bottom Area: 2 Column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 w-full">
+          
+          {/* LEFT COLUMN: Frontend & Frameworks */}
+          <div className="skill-left flex flex-col gap-6">
+            <h4 className="text-[11px] text-white/40 uppercase tracking-[0.3em] font-bold border-b border-white/10 pb-4 mb-2">
+              Frontend & Frameworks
+            </h4>
+            <div className="flex flex-wrap gap-6">
+              {frontendSkills.map((skill, index) => (
+                <div key={index} className="group relative flex flex-col items-center gap-3 mag">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center p-4 transition-all duration-300 group-hover:bg-white/[0.08] group-hover:border-white/20 group-hover:-translate-y-2">
+                    <img src={skill.icon} alt={skill.name} className="w-full h-full object-contain filter drop-shadow-md grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" />
+                  </div>
+                  <span className="text-xs text-white/50 font-mono group-hover:text-white transition-colors">{skill.name}</span>
+                  
+                  {/* Hover Glow */}
+                  <div className="absolute inset-0 blur-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none rounded-2xl" style={{ backgroundColor: skill.shadow }} />
+                </div>
               ))}
-            </h2>
-            
+            </div>
           </div>
 
-          {/* Bottom Row: The Floating Ecosystem Grid */}
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10 w-full">
-            {skillsData.map((skill, index) => (
-              
-              // GSAP Entrance Wrapper
-              <div key={index} className="skill-card-container">
-                
-                {/* Framer Motion Continuous Floating Effect */}
-                <motion.div 
-                  animate={{ y: [0, -12, 0] }}
-                  transition={{ 
-                    duration: 3 + (index % 3), // Randomizes speed slightly for organic feel
-                    repeat: Infinity, 
-                    ease: "easeInOut" 
-                  }}
-                  className="group relative flex flex-col items-center"
-                >
-                  
-                  {/* The Glass Orb / Icon Container */}
-                  <div className="w-24 h-24 md:w-32 md:h-32 rounded-[2rem] bg-gradient-to-b from-white/[0.05] to-white/[0.01] border border-white/10 backdrop-blur-3xl flex items-center justify-center p-6 mb-4 shadow-xl transition-all duration-500 group-hover:border-blue-500/50 group-hover:bg-white/[0.05]">
-                    
-                    {/* The Icon */}
-                    <img 
-                      src={skill.icon} 
-                      alt={skill.name} 
-                      className="w-full h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
-                    />
-
-                    {/* Ambient Glow behind icon on hover */}
-                    <div 
-                      className="absolute inset-0 rounded-[2rem] blur-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none"
-                      style={{ backgroundColor: skill.shadow }} 
-                    />
+          {/* RIGHT COLUMN: Backend & Databases */}
+          <div className="skill-right flex flex-col gap-6">
+            <h4 className="text-[11px] text-white/40 uppercase tracking-[0.3em] font-bold border-b border-white/10 pb-4 mb-2">
+              Backend & Databases
+            </h4>
+            <div className="flex flex-wrap gap-6">
+              {backendSkills.map((skill, index) => (
+                <div key={index} className="group relative flex flex-col items-center gap-3 mag">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center p-4 transition-all duration-300 group-hover:bg-white/[0.08] group-hover:border-white/20 group-hover:-translate-y-2">
+                    <img src={skill.icon} alt={skill.name} className="w-full h-full object-contain filter drop-shadow-md grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" />
                   </div>
+                  <span className="text-xs text-white/50 font-mono group-hover:text-white transition-colors">{skill.name}</span>
 
-                  {/* Skill Name & Level */}
-                  <div className="text-center">
-                    <h4 className="text-white font-bold text-base md:text-lg tracking-wide group-hover:text-blue-400 transition-colors">
-                      {skill.name}
-                    </h4>
-                    <span className="text-blue-500/50 font-mono text-[9px] uppercase tracking-widest mt-1 block">
-                      {skill.level}
-                    </span>
-                  </div>
-
-                  {/* Underglow Reflection */}
-                  <div className="w-16 h-2 bg-blue-500/0 group-hover:bg-blue-500/30 blur-[10px] rounded-full absolute -bottom-4 transition-all duration-500" />
-
-                </motion.div>
-              </div>
-            ))}
+                  {/* Hover Glow */}
+                  <div className="absolute inset-0 blur-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none rounded-2xl" style={{ backgroundColor: skill.shadow }} />
+                </div>
+              ))}
+            </div>
           </div>
 
         </div>
+
       </section>
 
       {/* Global Overlays */}
