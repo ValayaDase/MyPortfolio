@@ -6,6 +6,7 @@ import "./globals.css";
 import GlobalCursor from "@/components/GlobalCursor";
 import PreLoader from "@/components/PreLoader";
 import Navbar from "@/components/Navbar";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
@@ -20,8 +21,9 @@ export default function RootLayout({ children }) {
   };
 
   return (
-    <html lang="en" className={`${inter.variable} ${mono.variable} scroll-smooth`}>
+    <html lang="en" className={`${inter.variable} ${mono.variable}`}>
       <body className="bg-[#0a0a0a] text-white antialiased overflow-x-hidden">
+        <SmoothScroll>
 
         {/* global cursor */}
         <GlobalCursor />
@@ -49,6 +51,7 @@ export default function RootLayout({ children }) {
             <main>{children}</main>
           </motion.div>
         )}
+        </SmoothScroll>
       </body>
     </html>
   );

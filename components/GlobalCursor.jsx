@@ -8,24 +8,18 @@ export default function GlobalCursor() {
 
   useEffect(() => {
     // 1. Mouse Move Tracking (Desktop Only)
+    const xToCursor = gsap.quickTo(cursorRef.current, "x", { duration: 0.1, ease: "power2.out" });
+    const yToCursor = gsap.quickTo(cursorRef.current, "y", { duration: 0.1, ease: "power2.out" });
+    
+    const xToFollower = gsap.quickTo(followerRef.current, "x", { duration: 0.5, ease: "power3.out" });
+    const yToFollower = gsap.quickTo(followerRef.current, "y", { duration: 0.5, ease: "power3.out" });
+
     const moveCursor = (e) => {
       const { clientX: x, clientY: y } = e;
-
-      // Quick move for the inner dot
-      gsap.to(cursorRef.current, {
-        x: x,
-        y: y,
-        duration: 0.1, // Instantly follows mouse
-        ease: "power2.out",
-      });
-
-      // Smooth "lag" move for the outer follower ring
-      gsap.to(followerRef.current, {
-        x: x,
-        y: y,
-        duration: 0.5, // Creates the smooth lag effect
-        ease: "power3.out",
-      });
+      xToCursor(x);
+      yToCursor(y);
+      xToFollower(x);
+      yToFollower(y);
     };
 
     // 2. Hover Interactions (Scale up on links/buttons)

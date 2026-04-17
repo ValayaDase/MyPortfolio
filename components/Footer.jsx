@@ -69,7 +69,7 @@ export default function Footer() {
             // Using left % so it tracks across the full width of the container
             tl.fromTo(
                 scooterRef.current,
-                { left: "-5%"  },
+                { left: "-5%" },
                 { left: "100%", duration: 3, ease: "power2.inOut" },
                 0
             );
@@ -150,7 +150,7 @@ export default function Footer() {
 
             {/* ── Scooter + Name Reveal Section ── */}
             <div ref={nameTrackRef} className="max-w-7xl mx-auto px-6 w-full relative overflow-hidden" style={{ minHeight: "clamp(80px, 15vw, 200px)" }}>
-                
+
                 {/* 
                     Scooter Container: 
                     - Absolutely positioned inside the name track
@@ -158,15 +158,15 @@ export default function Footer() {
                     - Horizontally animated via GSAP left property
                     - Width is responsive: 20vw clamped between 80px and 180px
                 */}
-                <div 
+                <div
                     ref={scooterRef}
                     className="absolute z-20 pointer-events-none"
-                    style={{ 
+                    style={{
                         top: "60%",
                         transform: "translateY(-50%)",
                         left: "-5%",
                         width: "clamp(80px, 20vw, 180px)",
-                    }} 
+                    }}
                 >
                     <Lottie animationData={animationData} loop={true} />
                 </div>
@@ -177,14 +177,14 @@ export default function Footer() {
                     - Uses flex with justify-between to evenly space letters
                     - Font size is responsive via vw units
                 */}
-                <div 
-                    ref={nameRevealRef} 
+                <div
+                    ref={nameRevealRef}
                     className="w-full flex justify-between items-center whitespace-nowrap"
                     style={{ clipPath: "inset(0 100% 0 0)" }}
                 >
                     {name.split("").map((char, index) => (
-                        <span 
-                            key={index} 
+                        <span
+                            key={index}
                             className="font-black tracking-tighter leading-none cursor-default inline-block select-none transition-colors duration-700 hover:text-blue-500/40"
                             style={{
                                 fontSize: "clamp(2.5rem, 10vw, 10rem)",

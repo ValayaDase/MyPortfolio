@@ -61,12 +61,12 @@ export default function About() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top top", 
+          start: "top top",
           end: "+=200%", // Extra scroll distance for smoother animation
           pin: true,
-          scrub: 1.5, 
-          pinSpacing: true,        
-          preventOverlaps: true,   
+          scrub: 1.5,
+          pinSpacing: true,
+          preventOverlaps: true,
           fastScrollEnd: true
         }
       });
@@ -82,9 +82,9 @@ export default function About() {
 
       // 2. LEFT: Text 1 Breakdown (Scatter away)
       tl.to(".char1", {
-        x: "random(-400, 400)", 
-        y: "random(-400, 400)", 
-        rotationZ: "random(-180, 180)", 
+        x: "random(-400, 400)",
+        y: "random(-400, 400)",
+        rotationZ: "random(-180, 180)",
         opacity: 0,
         stagger: 0.01,
         duration: 2,
@@ -92,22 +92,22 @@ export default function About() {
       }, 0);
 
       // 3. LEFT: Text 2 Reconstruction (Assemble)
-      tl.fromTo(".char2", 
-        { 
-          x: "random(-400, 400)", 
-          y: "random(-400, 400)", 
-          rotationZ: "random(-180, 180)", 
-          opacity: 0 
+      tl.fromTo(".char2",
+        {
+          x: "random(-400, 400)",
+          y: "random(-400, 400)",
+          rotationZ: "random(-180, 180)",
+          opacity: 0
         },
-        { 
-          x: 0, 
-          y: 0, 
-          rotationZ: 0, 
-          opacity: 1, 
-          stagger: 0.01, 
-          duration: 2, 
-          ease: "power3.out" 
-        }, 
+        {
+          x: 0,
+          y: 0,
+          rotationZ: 0,
+          opacity: 1,
+          stagger: 0.01,
+          duration: 2,
+          ease: "power3.out"
+        },
         1 // Starts assembling half-way through the scatter
       );
 
@@ -127,8 +127,8 @@ export default function About() {
   const text2 = "I build scalable full-stack web apps.";
 
   return (
-    <section 
-      ref={containerRef} 
+    <section
+      ref={containerRef}
       className="relative z-[50] h-screen w-full bg-[#030303] flex items-center justify-center overflow-hidden px-6 md:px-12 lg:px-24 rounded-t-[40px] md:rounded-t-[80px] shadow-[0_-30px_100px_rgba(0,0,0,0.9)] border-t border-white/5"
     >
       {/* 3D Background */}
@@ -144,16 +144,16 @@ export default function About() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center mt-[-5vh]">
-        
+
         {/* LEFT SIDE: Typography */}
         <div className="flex flex-col justify-center w-full">
           <div className="flex items-center gap-4 mb-6 md:mb-10">
             <div className="h-[1px] w-8 bg-blue-500/50" />
             <span className="font-mono text-blue-500 text-[10px] md:text-xs uppercase tracking-[0.5em] opacity-80">
-                System.Init
+              System.Init
             </span>
           </div>
-          
+
           {/* Fixed Height Wrapper to prevent layout shift */}
           <div className="relative w-full h-[200px] md:h-[280px]">
             {/* Phase 1 Text */}
@@ -169,31 +169,31 @@ export default function About() {
 
         {/* RIGHT SIDE: Perfect Absolute Crossfade */}
         <div className="relative w-full max-w-lg h-[300px] md:h-[350px]">
-          
+
           {/* CONTENT PHASE 1: Always visible initially */}
           <div className="content-phase-1 absolute inset-0 flex flex-col justify-center space-y-6">
-             <h3 className="text-white text-2xl md:text-4xl font-bold tracking-tight">
-               The <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-gray-200 italic">Blueprint</span>.
-             </h3>
-             <p className="text-white/40 text-sm md:text-base font-light leading-relaxed">
-               Every great application starts with a raw idea. My process begins by mapping out complex logic and conceptualizing minimalist architectures before writing a single line of code.
-             </p>
-             <div className="border-l border-white/10 pl-6 py-2 mt-4">
-                <p className="text-white/30 text-xs md:text-sm italic">Scroll down to compile the architecture...</p>
-             </div>
+            <h3 className="text-white text-2xl md:text-4xl font-bold tracking-tight">
+              The <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-gray-200 italic">Blueprint</span>.
+            </h3>
+            <p className="text-white/40 text-sm md:text-base font-light leading-relaxed">
+              Every great application starts with a raw idea. My process begins by mapping out complex logic and conceptualizing minimalist architectures before writing a single line of code.
+            </p>
+            <div className="border-l border-white/10 pl-6 py-2 mt-4">
+              <p className="text-white/30 text-xs md:text-sm italic">Scroll down to compile the architecture...</p>
+            </div>
           </div>
 
           {/* CONTENT PHASE 2: Hidden initially, fades in smoothly */}
           <div className="content-phase-2 absolute inset-0 flex flex-col justify-center space-y-8 md:space-y-10 opacity-0 pointer-events-none">
             <div className="space-y-4">
-               <h3 className="text-white text-2xl md:text-4xl font-bold tracking-tight">
-                 Architecting the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400 italic">Future</span>.
-               </h3>
-               <p className="text-white/40 text-sm md:text-base font-light leading-relaxed">
-                 I’m a <span className="text-white font-medium">Computer Engineering</span> student 
-                 at Watumull Institute. I specialize in the 
-                 <span className="text-blue-400 font-mono text-[10px] md:text-xs ml-1 bg-blue-500/10 px-2 py-1 rounded border border-blue-500/20">MERN Stack</span> & Next.js.
-               </p>
+              <h3 className="text-white text-2xl md:text-4xl font-bold tracking-tight">
+                Architecting the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400 italic">Future</span>.
+              </h3>
+              <p className="text-white/40 text-sm md:text-base font-light leading-relaxed">
+                I’m a <span className="text-white font-medium">Computer Engineering</span> student
+                at Watumull Institute. I specialize in the
+                <span className="text-blue-400 font-mono text-[10px] md:text-xs ml-1 bg-blue-500/10 px-2 py-1 rounded border border-blue-500/20">MERN Stack</span> & Next.js.
+              </p>
             </div>
 
             <div className="border-l border-white/10 pl-6 py-1">
