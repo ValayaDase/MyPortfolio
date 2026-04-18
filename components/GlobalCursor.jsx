@@ -37,10 +37,44 @@ export default function GlobalCursor() {
     window.addEventListener("mousemove", moveCursor);
 
     // Add hovers to all interactive elements
-    const interactiveElements = document.querySelectorAll("a, button, .magnetic-target");
+    const interactiveElements = document.querySelectorAll("a, button, .magnetic-target, .mag");
     interactiveElements.forEach((el) => {
       el.addEventListener("mouseenter", onHover);
       el.addEventListener("mouseleave", onLeave);
+    });
+
+    // Magnetic Physics for .mag elements
+    const magneticElements = document.querySelectorAll(".mag");
+    
+    const moveMagnetic = (e) => {
+      const el = e.currentTarget;
+      const rect = el.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const distX = e.clientX - centerX;
+      const distY = e.clientY - centerY;
+      
+      gsap.to(el, {
+        x: distX * 0.4,
+        y: distY * 0.4,
+        duration: 0.3,
+        ease: "power2.out",
+      });
+    };
+
+    const leaveMagnetic = (e) => {
+      const el = e.currentTarget;
+      gsap.to(el, {
+        x: 0,
+        y: 0,
+        duration: 0.7,
+        ease: "elastic.out(1, 0.3)"
+      });
+    };
+
+    magneticElements.forEach((el) => {
+      el.addEventListener("mousemove", moveMagnetic);
+      el.addEventListener("mouseleave", leaveMagnetic);
     });
 
     // Cleanup
@@ -49,6 +83,10 @@ export default function GlobalCursor() {
       interactiveElements.forEach((el) => {
         el.removeEventListener("mouseenter", onHover);
         el.removeEventListener("mouseleave", onLeave);
+      });
+      magneticElements.forEach((el) => {
+        el.removeEventListener("mousemove", moveMagnetic);
+        el.removeEventListener("mouseleave", leaveMagnetic);
       });
     };
   }, []);

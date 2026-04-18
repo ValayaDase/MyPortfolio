@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaArrowRight } from "react-icons/fa";
+import ScrambleText from "./ScrambleText";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -128,8 +129,8 @@ export default function Hero() {
           >
             Digital Architect
           </motion.span>
-          <h1 className="text-5xl md:text-[90px] font-black tracking-tighter text-white leading-none mb-10 select-none">
-            VALAYA <span className="text-white/20">DASE.</span>
+          <h1 className="text-5xl md:text-[90px] font-black tracking-tighter text-white leading-none mb-10 select-none flex flex-wrap gap-4 justify-center">
+            <ScrambleText text="VALAYA" delay={1} iterations={3} speed={40} /> <span className="text-white/20"><ScrambleText text="DASE." delay={1.5} iterations={3} speed={40} /></span>
           </h1>
           <p className="text-white/40 text-sm md:text-base max-w-2xl mb-12 font-light leading-relaxed">
             Architecting robust full-stack applications with elegant code.
@@ -141,8 +142,10 @@ export default function Hero() {
               <motion.a whileHover={{ y: -5, color: '#fff' }} href="#" className="mag"><FaEnvelope /></motion.a>
             </div>
             <div className="flex gap-3">
-              <motion.button whileHover={{ scale: 1.05 }} className="group flex items-center gap-2 px-8 py-4 bg-white text-black rounded-full font-bold text-xs uppercase tracking-widest mag">
-                Explore Work <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
+              <motion.button whileHover={{ scale: 1.05 }} className="relative overflow-hidden group flex items-center gap-2 px-8 py-4 bg-white text-black rounded-full font-bold text-xs uppercase tracking-widest mag">
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-600 to-cyan-500 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                <span className="relative z-10 group-hover:text-white transition-colors duration-500">Explore Work</span> 
+                <FaArrowRight className="relative z-10 group-hover:text-white group-hover:translate-x-1 transition-all duration-500" />
               </motion.button>
             </div>
           </div>

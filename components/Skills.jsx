@@ -13,10 +13,14 @@ if (typeof window !== "undefined") {
 // Seamless Three.js Background
 function AmbientBackground() {
   const meshRef = useRef(null);
-  useFrame(() => {
+  useFrame((state) => {
     if (meshRef.current) {
       meshRef.current.rotation.y += 0.001;
       meshRef.current.rotation.z += 0.001;
+
+      // Mouse interaction
+      meshRef.current.position.x += (state.pointer.x * 1.5 - meshRef.current.position.x) * 0.05;
+      meshRef.current.position.y += (state.pointer.y * 1.5 - meshRef.current.position.y) * 0.05;
     }
   });
 
@@ -79,9 +83,9 @@ export default function Skills() {
           opacity: 1, 
           filter: "blur(0px)", 
           rotateX: 0, 
-          stagger: 0.02, 
-          duration: 0.8, 
-          ease: "power3.out" 
+          stagger: 0.03, 
+          duration: 1.2, 
+          ease: "back.out(1.7)" 
         }
       )
       

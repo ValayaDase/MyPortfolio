@@ -39,29 +39,29 @@ function AmbientBackground() {
 }
 
 const projects = [
-  { 
-    title: "VendorHub", 
-    desc: "Artist studio management portal featuring seller dashboards and activity tracking.", 
-    image: "/vendor-hub.png", 
-    tech: ["React", "Express", "Tailwind"] 
+  {
+    title: "VendorHub",
+    desc: "Artist studio management portal featuring seller dashboards and activity tracking.",
+    image: "/vendor-hub.png",
+    tech: ["React", "Express", "Tailwind"]
   },
-  { 
-    title: "ToggleNest", 
-    desc: "Collaborative task management for tracking projects and tasks with team members.", 
-    image: "/toggle-nest.png", 
-    tech: ["Next.js", "Node", "MongoDB"] 
+  {
+    title: "ToggleNest",
+    desc: "Collaborative task management for tracking projects and tasks with team members.",
+    image: "/toggle-nest.png",
+    tech: ["Next.js", "Node", "MongoDB"]
   },
-  { 
-    title: "Recipe Finder", 
-    desc: "Discover and manage recipes with a focus on user preferences.", 
-    image: "/recipe.png", 
-    tech: ["Python", "Flask", "NLP"] 
+  {
+    title: "Recipe Finder",
+    desc: "Discover and manage recipes with a focus on user preferences.",
+    image: "/recipe.png",
+    tech: ["Python", "Flask", "NLP"]
   },
-  { 
-    title: "EventHub", 
-    desc: "Real-time event organizing platform with user engagement features.", 
-    image: "/toggle-nest.png", 
-    tech: ["React", "Socket.io"] 
+  {
+    title: "EventHub",
+    desc: "Real-time event organizing platform with user engagement features.",
+    image: "/toggle-nest.png",
+    tech: ["React", "Socket.io"]
   },
 ];
 
@@ -94,24 +94,24 @@ export default function Projects() {
       });
 
       // 2. TITLE REVEAL
-      tl.fromTo(".proj-char", 
+      tl.fromTo(".proj-char",
         { y: "100%", opacity: 0, filter: "blur(12px)", rotateX: -30 },
-        { 
-          y: "0%", 
-          opacity: 1, 
-          filter: "blur(0px)", 
-          rotateX: 0, 
-          stagger: 0.02, 
-          duration: 0.8, 
-          ease: "power3.out" 
+        {
+          y: "0%",
+          opacity: 1,
+          filter: "blur(0px)",
+          rotateX: 0,
+          stagger: 0.02,
+          duration: 0.8,
+          ease: "power3.out"
         }
       );
 
       // 3. CARDS STACKING
       const cards = cardsRef.current;
-      
-      tl.fromTo(cards[0], 
-        { y: "100vh", opacity: 0 }, 
+
+      tl.fromTo(cards[0],
+        { y: "100vh", opacity: 0 },
         { y: "0%", opacity: 1, duration: 1, ease: "power2.out" }
       );
 
@@ -119,12 +119,12 @@ export default function Projects() {
         if (i > 0) {
           const prevCard = cards[i - 1];
           // Push prev card back (reduced opacity to hide text bleed)
-          tl.to(prevCard, { 
-            scale: 0.92, 
+          tl.to(prevCard, {
+            scale: 0.92,
             opacity: 0, // Fully fade out previous card's content to avoid mess
-            y: "-4%", 
-            duration: 1, 
-            ease: "power2.inOut" 
+            y: "-4%",
+            duration: 1,
+            ease: "power2.inOut"
           }, `stack-${i}`);
 
           tl.fromTo(card,
@@ -144,7 +144,7 @@ export default function Projects() {
 
   return (
     <div ref={sectionRef} className="relative w-full bg-[#030303] overflow-hidden">
-      
+
       {/* Three.js Background */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
         <Canvas>
@@ -159,10 +159,10 @@ export default function Projects() {
 
       {/* Main Section - Exactly 100vh */}
       <section className="relative h-screen w-full flex flex-col items-center px-4 md:px-8 lg:px-20">
-        
+
         {/* Full height wrapper with proper padding */}
         <div className="relative z-10 w-full max-w-6xl flex flex-col h-full pt-20 pb-12">
-          
+
           {/* Top: Compact Title Area */}
           <div className="flex flex-col items-center justify-center text-center shrink-0 mb-6 md:mb-8">
             <div className="flex items-center gap-3 mb-3">
@@ -172,7 +172,7 @@ export default function Projects() {
               </span>
               <div className="h-[1px] w-6 md:w-8 bg-blue-500/50" />
             </div>
-            
+
             <div ref={titleRef}>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-none text-white">
                 {titleWords.map((word, i) => (
@@ -186,7 +186,7 @@ export default function Projects() {
 
           {/* Bottom: Flexible Cards Area that fills EXACT remaining space */}
           <div className="relative w-full flex-1 flex justify-center items-center min-h-0">
-            
+
             {/* The absolute container takes 100% of the flexible space but caps at 400px so it doesn't look stretched */}
             <div className="relative w-full max-w-5xl h-full max-h-[400px] lg:max-h-[450px]">
               {projects.map((project, index) => (
@@ -196,14 +196,14 @@ export default function Projects() {
                   // bg-[#050505] instead of transparent to block the previous card's text
                   className="absolute top-0 left-0 w-full h-full flex flex-col md:flex-row gap-6 md:gap-10 items-center bg-[#050505] border border-white/10 rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 lg:p-10 shadow-[0_0_50px_rgba(0,0,0,0.8)] origin-top"
                 >
-                  
+
                   {/* Left: Image Box */}
                   <div className="relative h-[45%] md:h-full w-full md:w-[50%] bg-[#0a0a0a] rounded-xl overflow-hidden border border-white/5 shrink-0 flex items-center justify-center">
-                    <Image 
-                      src={project.image} 
-                      alt={project.title} 
-                      fill 
-                      className="object-contain p-2 md:p-6" 
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-contain p-2 md:p-6"
                     />
                   </div>
 
@@ -213,9 +213,9 @@ export default function Projects() {
                       <h3 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight line-clamp-1">
                         {project.title}
                       </h3>
-                      <a 
-                        href="https://github.com/Valaya-Dase" 
-                        target="_blank" 
+                      <a
+                        href="https://github.com/Valaya-Dase"
+                        target="_blank"
                         rel="noreferrer"
                         className="p-2 md:p-3 bg-white/5 rounded-full text-white/40 hover:text-blue-500 hover:bg-blue-500/10 transition-all border border-white/5 shrink-0"
                       >
@@ -235,7 +235,7 @@ export default function Projects() {
                       ))}
                     </div>
                   </div>
-                  
+
                 </div>
               ))}
             </div>

@@ -11,10 +11,14 @@ if (typeof window !== "undefined") {
 
 function AmbientBackground() {
   const meshRef = useRef(null);
-  useFrame(() => {
+  useFrame((state) => {
     if (meshRef.current) {
       meshRef.current.rotation.y += 0.001;
       meshRef.current.rotation.z += 0.001;
+
+      // Mouse interaction
+      meshRef.current.position.x += (state.pointer.x * 1.5 - meshRef.current.position.x) * 0.05;
+      meshRef.current.position.y += (state.pointer.y * 1.5 - meshRef.current.position.y) * 0.05;
     }
   });
 
@@ -104,9 +108,9 @@ export default function About() {
           y: 0,
           rotationZ: 0,
           opacity: 1,
-          stagger: 0.01,
-          duration: 2,
-          ease: "power3.out"
+          stagger: 0.015,
+          duration: 2.5,
+          ease: "back.out(1.4)"
         },
         1 // Starts assembling half-way through the scatter
       );

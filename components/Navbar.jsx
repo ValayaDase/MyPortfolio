@@ -68,8 +68,8 @@ export default function Navbar() {
                 {isActive && (
                   <motion.div
                     layoutId="active-pill"
-                    className="absolute inset-0 bg-blue-600 rounded-full shadow-[0_0_15px_rgba(37,99,235,0.5)]"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    className="absolute inset-0 bg-blue-600 rounded-full shadow-[0_0_25px_rgba(37,99,235,0.8)] border border-blue-400/50"
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
                     style={{ zIndex: 0 }}
                   />
                 )}

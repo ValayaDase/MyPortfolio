@@ -40,11 +40,9 @@ export default function TextMarquee() {
   }, []);
 
   const contentList = [
-    { text: "Architecting High-Performance Digital Experiences", stroke: false },
     { text: "Bridging Complex Logic With Minimalist Design", stroke: true },
     { text: "Engineering Scalable Full-Stack Solutions", stroke: false },
     { text: "Developing Robust RESTful APIs", stroke: true },
-    { text: "Optimizing Database Architectures", stroke: false },
     { text: "Crafting Intuitive User Interfaces", stroke: true },
   ];
 

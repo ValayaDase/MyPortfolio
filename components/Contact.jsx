@@ -99,8 +99,9 @@ export default function Contact() {
                 <textarea rows="4" placeholder="Tell me about your project..." className="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all w-full resize-none"></textarea>
               </div>
 
-              <button type="button" className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-2xl transition-all shadow-lg shadow-blue-600/20 active:scale-[0.98]">
-                Send Message
+              <button type="button" className="relative overflow-hidden w-full py-5 bg-blue-600 text-white font-bold rounded-2xl transition-all shadow-[0_0_30px_rgba(37,99,235,0.3)] active:scale-[0.98] group mag">
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-cyan-400 to-blue-500 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                <span className="relative z-10">Send Message</span>
               </button>
             </form>
           </motion.div>
