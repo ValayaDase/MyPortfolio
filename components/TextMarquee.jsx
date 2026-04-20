@@ -9,76 +9,106 @@ if (typeof window !== "undefined") {
 
 export default function TextMarquee() {
   const sectionRef = useRef(null);
-  const textRef = useRef(null);
+  const topMarqueeRef = useRef(null);
+  const bottomMarqueeRef = useRef(null);
+
+  const skills = [
+    "React", "Next.js", "Java", "MongoDB", "Node.js", 
+    "TailwindCSS", "PostgreSQL", "Express", "TypeScript", "AWS"
+  ];
+
+  // Repeat skills to ensure the marquee is long enough to scroll infinitely or purely scrub
+  const duplicatedSkills = [...skills, ...skills, ...skills, ...skills];
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      // Dynamic calculation so it scrolls exactly from start to end
-      const getScrollAmount = () => {
-        let textWidth = textRef.current.scrollWidth;
-        let windowWidth = window.innerWidth;
-        return -(textWidth - windowWidth + 100); // 100px buffer margin
-      };
-
-      gsap.to(textRef.current, {
-        x: getScrollAmount,
-        ease: "none",
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "center center", 
-          // Scroll length adjusts automatically to the text length
-          end: () => `+=${textRef.current.scrollWidth}`, 
-          pin: true,
-          pinSpacing: true,
-          scrub: 1, // Smooth lag effect
-          invalidateOnRefresh: true, // Recalculates on screen resize
+          start: "top 80%", // Start when section enters viewport
+          end: "bottom 20%", // End before it leaves viewport
+          scrub: 1, // Smooth scrubbing, NO pinning so user doesn't wait
         }
       });
+
+      const windowWidth = window.innerWidth;
+      const scrollDistance = windowWidth * 0.6; // Moves only 60% of the screen width for a much slower, relaxed pace
+
+      // Top Marquee - moves left
+      tl.to(topMarqueeRef.current, {
+        x: -scrollDistance,
+        ease: "none"
+      }, 0);
+
+      // Bottom Marquee - moves right
+      // Start shifted left so it can seamlessly move right towards 0
+      gsap.set(bottomMarqueeRef.current, { x: -scrollDistance });
+      tl.to(bottomMarqueeRef.current, {
+        x: 0,
+        ease: "none"
+      }, 0);
+
+      // Liquid Fill Animation for highlighted words (from bottom to top)
+      tl.to(".liquid-fill", {
+        clipPath: "inset(0% 0 0 0)",
+        ease: "power2.inOut"
+      }, 0.1);
+
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  const contentList = [
-    { text: "Bridging Complex Logic With Minimalist Design", stroke: true },
-    { text: "Engineering Scalable Full-Stack Solutions", stroke: false },
-    { text: "Developing Robust RESTful APIs", stroke: true },
-    { text: "Crafting Intuitive User Interfaces", stroke: true },
-  ];
+  const Highlight = ({ children }) => (
+    <span className="relative inline-block text-transparent whitespace-nowrap" style={{ WebkitTextStroke: "1px rgba(255,255,255,0.4)" }}>
+      {children}
+      <span 
+        className="liquid-fill absolute left-0 top-0 w-full h-full bg-gradient-to-t from-blue-600 via-blue-500 to-cyan-400 bg-clip-text text-transparent select-none drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" 
+        style={{ WebkitTextStroke: "0px", clipPath: "inset(100% 0 0 0)" }}
+        aria-hidden="true"
+      >
+        {children}
+      </span>
+    </span>
+  );
 
   return (
     <section 
       ref={sectionRef} 
-      className="relative w-full py-10 md:py-14 bg-[#030303] flex items-center overflow-hidden z-20 border-t border-b border-white/5"
+      // YAHAN CHANGE KIYA HAI: pt-24 pb-48 md:pt-32 md:pb-64 aur z-10 rakha hai
+      className="relative w-full pt-24 pb-48 md:pt-32 md:pb-64 bg-[#030303] flex flex-col justify-center overflow-hidden z-10 border-t border-white/5"
     >
       {/* Edge gradients so text doesn't cut sharply */}
-      <div className="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#030303] via-[#030303]/90 to-transparent z-10 pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#030303] via-[#030303]/90 to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 left-0 w-24 md:w-48 bg-gradient-to-r from-[#030303] via-[#030303]/90 to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-24 md:w-48 bg-gradient-to-l from-[#030303] via-[#030303]/90 to-transparent z-10 pointer-events-none" />
 
-      {/* The moving text container */}
-      <div 
-        ref={textRef} 
-        // 🚀 CRITICAL FIXES HERE: 
-        // 1. `whitespace-nowrap` guarantees it stays on ONE single line.
-        // 2. `text-2xl md:text-4xl` sets the perfect H2 size.
-        className="flex items-center whitespace-nowrap font-black text-2xl md:text-4xl uppercase tracking-tight select-none pl-6 md:pl-12"
-        style={{ width: "max-content" }}
-      >
-        {contentList.map((item, index) => (
-          <React.Fragment key={index}>
-            <span 
-              className={item.stroke ? "text-transparent" : "text-white/60"}
-              style={item.stroke ? { WebkitTextStroke: "1px rgba(255,255,255,0.5)" } : {}}
-            >
-              {item.text}
-            </span>
-            
-            {/* The Blue Dot separator */}
-            {index !== contentList.length - 1 && (
-              <span className="mx-6 md:mx-10 text-blue-500 text-2xl md:text-4xl">•</span>
-            )}
-          </React.Fragment>
-        ))}
+      {/* Top Marquee */}
+      <div className="w-full overflow-hidden flex mb-12 md:mb-16 opacity-60 select-none">
+        <div ref={topMarqueeRef} className="flex items-center gap-8 md:gap-16 text-2xl md:text-5xl lg:text-6xl font-black uppercase text-transparent whitespace-nowrap" style={{ WebkitTextStroke: "1px rgba(255,255,255,0.6)", width: "max-content" }}>
+          {duplicatedSkills.map((skill, index) => (
+            <React.Fragment key={`top-${index}`}>
+              <span>{skill}</span>
+              <span className="text-blue-500 text-2xl md:text-5xl">•</span>
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+
+      {/* Middle Sentence */}
+      <div className="relative z-20 w-full max-w-[70rem] mx-auto px-6 md:px-12 text-center text-2xl md:text-4xl lg:text-5xl font-black leading-[1.3] md:leading-[1.4] text-white/90 tracking-tight">
+        I bridge complex logic with minimalist design, building scalable <Highlight>full-stack</Highlight> solutions and <Highlight>robust APIs</Highlight> while crafting clean, intuitive <Highlight>user interfaces</Highlight>.
+      </div>
+
+      {/* Bottom Marquee */}
+      <div className="w-full overflow-hidden flex mt-12 md:mt-16 opacity-60 select-none">
+        <div ref={bottomMarqueeRef} className="flex items-center gap-8 md:gap-16 text-2xl md:text-5xl lg:text-6xl font-black uppercase text-transparent whitespace-nowrap" style={{ WebkitTextStroke: "1px rgba(255,255,255,0.6)", width: "max-content" }}>
+          {duplicatedSkills.map((skill, index) => (
+            <React.Fragment key={`bottom-${index}`}>
+              <span>{skill}</span>
+              <span className="text-blue-500 text-2xl md:text-5xl">•</span>
+            </React.Fragment>
+          ))}
+        </div>
       </div>
     </section>
   );

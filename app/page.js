@@ -12,10 +12,11 @@ export default function Home() {
     <div className="flex flex-col">
       <Hero />
       <About />
-      <Education />
+      {/* <Education /> */}
       <Skills />
-      <TextMarquee />
+      
       <Projects />
+     <TextMarquee /> 
       <Contact />
       <Footer />
       {/* Future sections (Skills, Projects, Contact) yahan aayenge */}

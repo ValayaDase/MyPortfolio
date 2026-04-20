@@ -40,7 +40,7 @@ export default function Contact() {
 
   return (
     <section id="contact" ref={sectionRef} className="py-24 bg-[#0a0a0a] border-t border-white/5 relative overflow-hidden">
-      <FuturisticBackground />
+      {/* <FuturisticBackground /> */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -107,40 +107,6 @@ export default function Contact() {
           </motion.div>
 
         </div>
-
-        {/* Footer Area with Socials */}
-        {/* <motion.div variants={itemVariants} className="mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
-          
-          <a href="mailto:valayadase2005@gmail.com" className="flex items-center gap-3 text-white/60 hover:text-blue-500 transition-colors group">
-            <div className="p-3 bg-white/5 rounded-full group-hover:bg-blue-500/10 transition-colors">
-              <FaEnvelope size={16} />
-            </div>
-            <span className="font-mono text-sm">valayadase2005@gmail.com</span>
-          </a>
-
-          <div className="flex gap-4">
-            {[
-              { icon: <FaLinkedinIn size={18} />, link: "https://linkedin.com/in/valaya-dase" },
-              { icon: <FaGithub size={18} />, link: "https://github.com/Valaya-Dase" },
-              { icon: <FaTwitter size={18} />, link: "#" },
-            ].map((social, i) => (
-              <a 
-                key={i}
-                href={social.link}
-                target="_blank"
-                className="p-3 bg-white/5 rounded-xl text-white/40 hover:text-white hover:bg-blue-600 transition-all duration-300"
-              >
-                {social.icon}
-              </a>
-            ))}
-          </div>
-
-          <p className="text-white/20 text-[10px] uppercase tracking-[0.3em] text-center md:text-right hidden lg:block">
-            © 2026 Valaya Dase.<br/>All Rights Reserved.
-          </p>
-
-        </motion.div> */}
-
       </motion.div>
     </section>
   );
