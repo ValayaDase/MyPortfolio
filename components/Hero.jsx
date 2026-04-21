@@ -1,157 +1,234 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaArrowRight } from "react-icons/fa";
-import ScrambleText from "./ScrambleText";
+import React, { useLayoutEffect, useRef } from 'react';
+import Image from 'next/image';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
-// 🚀 Chote aur premium Dev Symbols
-const DevSymbol = ({ char, delay, position, color, glow }) => {
+// Helper to split text into individual spans for 3D Particle Assembly
+const SplitText = ({ text }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.5 }}
-      animate={{
-        opacity: [0.3, 0.7, 0.3],
-        scale: 1,
-        y: [0, -10, 0],
-        rotate: [0, 4, -4, 0]
-      }}
-      transition={{
-        opacity: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: delay },
-        y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: delay },
-      }}
-      style={{ ...position, color: color, textShadow: `0 0 10px ${glow}` }}
-      className="absolute z-0 pointer-events-none font-mono text-2xl md:text-4xl font-black select-none"
-    >
-      {char}
-    </motion.div>
+    <span aria-label={text} className="inline-block flex">
+      {text.split('').map((char, index) => (
+        <span 
+          key={index} 
+          aria-hidden="true" 
+          className="particle-char inline-block"
+          style={{ whiteSpace: char === ' ' ? 'pre' : 'normal' }}
+        >
+          {char}
+        </span>
+      ))}
+    </span>
   );
 };
 
-export default function Hero() {
-  const wrapperRef = useRef(null); // The tall container for scroll distance
-  const editorRef = useRef(null);
-  const contentRef = useRef(null);
-  const nameRef = useRef(null);
-  const [showIcons, setShowIcons] = useState(false);
+const Hero = () => {
+  const scrollTrackRef = useRef(null);
+  const cardGroupRef = useRef(null);
+  const cardBackplateRef = useRef(null);
+  const imageWrapperRef = useRef(null);
 
-  useEffect(() => {
-    // 1. Console Typing Effect
-    const nameText = "VALAYA DASE_";
-    let i = 0;
-    const typing = setInterval(() => {
-      if (nameRef.current) {
-        nameRef.current.innerHTML = nameText.slice(0, i) + '<span class="text-blue-500 animate-pulse">|</span>';
-        i++; if (i > nameText.length) clearInterval(typing);
-      }
-    }, 120);
+  useLayoutEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
 
-    // 2. GSAP Animation tied to the tall wrapper
-    let ctx = gsap.context(() => {
+    const ctx = gsap.context(() => {
+      
+      // The timeline is tied to the invisible scroll track
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: wrapperRef.current,
+          trigger: scrollTrackRef.current,
           start: "top top",
-          end: "bottom bottom", // Animation finishes when wrapper ends
-          scrub: 1.2,
-          // 🚀 PIN HATA DIYA HAI. Sticky layout handle karega overlap!
-        },
+          end: "bottom bottom", 
+          scrub: 0.5, 
+        }
       });
 
-      tl.to(editorRef.current, { scale: 0.5, rotateX: 25, opacity: 0, y: -100, duration: 1.5, ease: "power2.inOut" })
-        .fromTo(contentRef.current,
-          { y: 150, opacity: 0, scale: 0.95 },
-          { y: 0, opacity: 1, scale: 1, duration: 2, ease: "expo.out" }, "-=0.8");
+      tl
+        // Phase 1: Entire Card Group scales down slightly
+        .to(cardGroupRef.current, {
+          scale: 0.85,
+          duration: 1,
+          ease: "power2.inOut"
+        })
 
-      ScrollTrigger.create({
-        trigger: wrapperRef.current,
-        start: "top top",
-        end: "bottom bottom",
-        onUpdate: (self) => setShowIcons(self.progress > 0.15)
-      });
-    }, wrapperRef);
+        // Phase 2: Card Group moves RIGHT and Flips in 3D
+        .addLabel("moveRight")
+        .to(cardGroupRef.current, {
+          x: "22vw", // Move to right side
+          rotateY: -20, // 3D Tilt
+          rotateX: 10,
+          duration: 3,
+          ease: "power3.inOut"
+        }, "moveRight")
+        
+        // Intensify the glow on the backplate as it moves
+        .to(cardBackplateRef.current, {
+          boxShadow: "0 0 80px rgba(0, 255, 255, 0.4)",
+          borderColor: "rgba(0, 255, 255, 0.5)",
+          duration: 3
+        }, "moveRight")
 
-    return () => { ctx.revert(); clearInterval(typing); };
+        // Phase 3: TRUE Image Pop-Out (Fixed Z-Fighting)
+        // Notice 'z: 50' which physically pushes the image in front of the glass in 3D space
+        .to(imageWrapperRef.current, {
+          scale: 1.25, 
+          x: -30, // Shift left out of bounds
+          y: -40, // Shift up out of bounds
+          z: 50,  // <-- Pushes image forward so it doesn't slice through the glass
+          rotateY: 10, // Counter-rotation to make it look physically separated
+          boxShadow: "-20px 40px 60px rgba(0,0,0,0.9)", // Massive drop shadow onto the card
+          duration: 2.5,
+          ease: "power2.out"
+        }, "-=1.5")
+
+        // Phase 4: Particle 3D Assembly (Text forms on the Left)
+        .fromTo(".particle-char", 
+          { 
+            opacity: 0, 
+            x: () => gsap.utils.random(-400, 0), 
+            y: () => gsap.utils.random(-300, 300), 
+            z: () => gsap.utils.random(200, 800), // Start close to camera
+            filter: "blur(20px)", 
+            scale: 0 
+          },
+          { 
+            opacity: 1, 
+            x: 0, 
+            y: 0, 
+            z: 0,
+            filter: "blur(0px)", 
+            scale: 1, 
+            duration: 3, 
+            stagger: 0.03, 
+            ease: "power3.out"
+          }, 
+          "moveRight+=0.5" // Sync with card moving
+        )
+        
+        // Phase 5: Fade in description and UI elements smoothly
+        .fromTo(".content-fade",
+          { opacity: 0, y: 40, filter: "blur(10px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 2, stagger: 0.15, ease: "power2.out" },
+          "moveRight+=1.5"
+        );
+
+    });
+
+    return () => ctx.revert();
   }, []);
 
   return (
-    // 🚀 THE MAGIC WRAPPER: height is 250vh so you have plenty of time to scroll and see the animation
-    <section ref={wrapperRef} className="relative w-full h-[250vh] z-10 bg-[#050505]">
+    <div className="relative w-full bg-[#050505]">
+      
+      {/* --- THE FIXED STAGE --- 
+        This stays locked in the background. It does NOT scroll. 
+        Animations happen here based on how far down the user scrolls.
+      */}
+      <div className="fixed top-0 left-0 w-full h-screen z-0 overflow-hidden" style={{ perspective: '2000px' }}>
+        <div className="container mx-auto max-w-[1400px] h-full flex items-center justify-center relative px-8">
+          
+          {/* CONTENT: Assembles on the Left */}
+          <div className="absolute left-[5%] md:left-[10%] w-[50%] z-20 pointer-events-none">
+            
+            <h1 className="text-white text-6xl md:text-8xl font-black tracking-tighter leading-none mb-6">
+              <SplitText text="VALAYA" /> <br />
+              <span className="text-cyan-500">
+                <SplitText text="DASE." />
+              </span>
+            </h1>
+            
+            <div className="content-fade opacity-0 pointer-events-auto">
+              <p className="text-white/70 text-lg md:text-xl max-w-md font-light leading-relaxed mb-8">
+                Full-stack developer building immersive, high-performance digital experiences. 
+                Focused on bridging scalable logic with fluid, cinematic motion design.
+              </p>
+              
+              <div className="flex flex-wrap items-center gap-6">
+                
+                {/* LinkedIn */}
+                <a href="#" className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#0A66C2] hover:border-[#0A66C2] hover:text-white transition-all duration-300">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+                
+                {/* GitHub */}
+                <a href="#" className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:border-white hover:text-black transition-all duration-300">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </a>
+                
+                {/* Instagram */}
+                <a href="#" className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#E1306C] hover:border-[#E1306C] hover:text-white transition-all duration-300">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
 
-      {/* 🚀 THE STICKY HERO: This stays fixed on screen while you scroll through the 250vh */}
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden font-inter">
-
-        {/* Background Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:50px_50px]" />
-
-        {/* Symbols Layer */}
-        <AnimatePresence>
-          {showIcons && (
-            <div className="absolute inset-0 z-0 pointer-events-none">
-              <DevSymbol char="</>" delay={0} color="#3b82f6" glow="rgba(59, 130, 246, 0.4)" position={{ top: "25%", left: "18%" }} />
-              <DevSymbol char="{ }" delay={0.4} color="#8b5cf6" glow="rgba(139, 92, 246, 0.4)" position={{ top: "30%", right: "20%" }} />
-              <DevSymbol char=";" delay={0.8} color="#10b981" glow="rgba(16, 185, 129, 0.4)" position={{ bottom: "25%", right: "18%" }} />
-            </div>
-          )}
-        </AnimatePresence>
-
-        {/* Editor Console */}
-        <div ref={editorRef} className="absolute z-20 w-full max-w-lg px-6 pointer-events-none">
-          <div className="bg-[#0f0f0f]/90 border border-white/5 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-md">
-            <div className="bg-white/5 p-3 flex gap-1.5 border-b border-white/5">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-              <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-              <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
-            </div>
-            <div className="p-8 font-mono text-xs md:text-sm leading-relaxed text-white/70">
-              <span className="text-pink-500 italic">const</span> <span className="text-blue-400 font-bold">developer</span> = {"{"} <br />
-              <div className="pl-6 mt-2 border-l border-white/5">
-                name: <span className="text-green-400">"</span><span ref={nameRef} className="text-green-400"></span><span className="text-green-400">"</span>, <br />
-                passion: <span className="text-yellow-400">"Scalable Logic"</span>, <br />
-                status: <span className="text-purple-400">"Building Future"</span>
+                {/* Liquid Fill Button */}
+                <button className="relative overflow-hidden group px-8 py-4 rounded-full border border-cyan-500 text-cyan-400 font-bold uppercase tracking-widest text-xs transition-colors">
+                  <span className="absolute inset-x-0 bottom-0 h-0 bg-cyan-500 transition-all duration-300 ease-out group-hover:h-full z-0"></span>
+                  <span className="relative z-10 group-hover:text-black transition-colors duration-300">Download Resume</span>
+                </button>
               </div>
-              {"}"}
             </div>
           </div>
-        </div>
 
-        {/* Final Text Content */}
-        <div ref={contentRef} className="relative z-30 text-center px-6 opacity-0 flex flex-col items-center pointer-events-auto">
-          <motion.span
-            className="text-blue-500 font-mono tracking-[0.6em] mb-4 block uppercase text-[10px]"
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          {/* CARD MASTER GROUP: Holds both backplate and image */}
+          <div 
+            ref={cardGroupRef}
+            className="relative z-10 w-[300px] h-[450px] md:w-[340px] md:h-[500px] shrink-0"
+            style={{ transformStyle: 'preserve-3d' }}
           >
-            Digital Architect
-          </motion.span>
-          <h1 className="text-5xl md:text-[90px] font-black tracking-tighter text-white leading-none mb-10 select-none flex flex-wrap gap-4 justify-center">
-            <ScrambleText text="VALAYA" delay={1} iterations={3} speed={40} /> <span className="text-white/20"><ScrambleText text="DASE." delay={1.5} iterations={3} speed={40} /></span>
-          </h1>
-          <p className="text-white/40 text-sm md:text-base max-w-2xl mb-12 font-light leading-relaxed">
-            Architecting robust full-stack applications with elegant code.
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-10">
-            <div className="flex gap-6 text-xl text-white/20">
-              <motion.a whileHover={{ y: -5, color: '#fff' }} href="#" className="mag"><FaGithub /></motion.a>
-              <motion.a whileHover={{ y: -5, color: '#3b82f6' }} href="#" className="mag"><FaLinkedin /></motion.a>
-              <motion.a whileHover={{ y: -5, color: '#fff' }} href="#" className="mag"><FaEnvelope /></motion.a>
-            </div>
-            <div className="flex gap-3">
-              <motion.button whileHover={{ scale: 1.05 }} className="relative overflow-hidden group flex items-center gap-2 px-8 py-4 bg-white text-black rounded-full font-bold text-xs uppercase tracking-widest mag">
-                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-600 to-cyan-500 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-                <span className="relative z-10 group-hover:text-white transition-colors duration-500">Explore Work</span> 
-                <FaArrowRight className="relative z-10 group-hover:text-white group-hover:translate-x-1 transition-all duration-500" />
-              </motion.button>
+            {/* 1. The Glowing Backplate (Pushed slightly back) */}
+            <div 
+              ref={cardBackplateRef}
+              className="absolute inset-0 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-[0_0_30px_rgba(0,0,0,0.8)]"
+              style={{ transform: "translateZ(-1px)" }} 
+            />
+              
+            {/* 2. The Image Wrapper (Pulled slightly forward initially) */}
+            <div 
+              ref={imageWrapperRef} 
+              className="absolute inset-4 z-20 rounded-[1.5rem] overflow-hidden bg-[#050505]"
+              style={{ transform: "translateZ(1px)" }} 
+            >
+              <Image 
+                src="/valaya.jpeg" 
+                alt="Valaya Dase Portrait"
+                fill
+                className="object-cover"
+                priority
+                sizes="(max-width: 768px) 300px, 340px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
+              <div className="absolute bottom-6 left-0 w-full text-center z-20">
+                 <p className="text-white font-mono text-xs tracking-widest uppercase shadow-black drop-shadow-md">Valaya Dase</p>
+              </div>
             </div>
           </div>
-        </div>
 
+        </div>
       </div>
-    </section>
+
+      {/* --- THE SCROLL TRACK --- 
+        This is invisible. It creates the actual scrollable space that the browser reads.
+        250vh = 2.5 screens worth of scrolling for the animation to complete.
+      */}
+      <div ref={scrollTrackRef} className="relative z-10 w-full h-[250vh] pointer-events-none" />
+
+      {/* --- ABOUT SECTION --- 
+        Because the Hero stage is `fixed`, this section will naturally scroll UP 
+        over the Hero section as you scroll past the 250vh invisible track. 
+        Zero gaps. Perfect overlap.
+      */}
+      <section className="relative z-30 bg-white text-black py-32 px-10 min-h-screen rounded-t-[4rem] shadow-[0_-30px_60px_rgba(0,0,0,0.8)]">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-sm font-mono tracking-widest text-gray-400 uppercase mb-4">// Introduction</h2>
+          <h2 className="text-6xl md:text-7xl font-black mb-8 tracking-tighter uppercase leading-none">About the <br/> <span className="text-cyan-600">Architect.</span></h2>
+          <p className="text-2xl text-gray-700 max-w-4xl leading-relaxed font-light">
+            I specialize in full-stack architecture and interactive front-end design. My goal is to build digital products that not only function flawlessly under the hood but deliver a premium, cinematic experience to the user.
+          </p>
+        </div>
+      </section>
+
+    </div>
   );
-}
+};
+
+export default Hero;
