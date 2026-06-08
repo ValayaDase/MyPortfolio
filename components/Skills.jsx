@@ -71,44 +71,44 @@ export default function Skills() {
           trigger: sectionRef.current,
           start: "top 80%", // Trigger when section is 20% visible
           // play on enter, reverse on leave back (vapas scroll karne pe jayega)
-          toggleActions: "play none none reverse", 
+          toggleActions: "play none none reverse",
         }
       });
 
       // 1. TITLE REVEAL
-      tl.fromTo(".skill-char", 
+      tl.fromTo(".skill-char",
         { y: 50, opacity: 0, filter: "blur(8px)", rotateX: -30 },
-        { 
-          y: 0, 
-          opacity: 1, 
-          filter: "blur(0px)", 
-          rotateX: 0, 
-          stagger: 0.03, 
-          duration: 1.2, 
-          ease: "back.out(1.7)" 
+        {
+          y: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+          rotateX: 0,
+          stagger: 0.03,
+          duration: 1.2,
+          ease: "back.out(1.7)"
         }
       )
-      
-      // 2. SHORT DESCRIPTION (Comes from Top)
-      .fromTo(".skill-desc",
-        { y: -40, opacity: 0, filter: "blur(5px)" },
-        { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" },
-        "-=0.5"
-      )
 
-      // 3. LEFT SECTION (Comes from Left)
-      .fromTo(".skill-left",
-        { x: -100, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1, ease: "power3.out" },
-        "-=0.6"
-      )
+        // 2. SHORT DESCRIPTION (Comes from Top)
+        .fromTo(".skill-desc",
+          { y: -40, opacity: 0, filter: "blur(5px)" },
+          { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" },
+          "-=0.5"
+        )
 
-      // 4. RIGHT SECTION (Comes from Right)
-      .fromTo(".skill-right",
-        { x: 100, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1, ease: "power3.out" },
-        "-=0.8" // Starts almost together with left
-      );
+        // 3. LEFT SECTION (Comes from Left)
+        .fromTo(".skill-left",
+          { x: -100, opacity: 0 },
+          { x: 0, opacity: 1, duration: 1, ease: "power3.out" },
+          "-=0.6"
+        )
+
+        // 4. RIGHT SECTION (Comes from Right)
+        .fromTo(".skill-right",
+          { x: 100, opacity: 0 },
+          { x: 0, opacity: 1, duration: 1, ease: "power3.out" },
+          "-=0.8" // Starts almost together with left
+        );
 
     }, sectionRef);
 
@@ -119,7 +119,7 @@ export default function Skills() {
 
   return (
     <div ref={sectionRef} className="relative w-full bg-[#030303] overflow-hidden min-h-screen py-24 z-20 border-t border-white/5">
-      
+
       {/* Background Visuals */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
         <Canvas>
@@ -133,7 +133,7 @@ export default function Skills() {
       </div>
 
       <section className="relative z-10 w-full max-w-6xl mx-auto px-6 lg:px-12 flex flex-col gap-12 md:gap-20">
-        
+
         {/* Top Area: Header & Description */}
         <div className="w-full flex flex-col items-start text-left max-w-3xl">
           <div className="flex items-center gap-4 mb-6">
@@ -142,7 +142,7 @@ export default function Skills() {
                 // 03. Skills
             </span>
           </div>
-          
+
           <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none text-white mb-8">
             {title.map((word, i) => (
               <span key={i} className="inline-block mr-[0.3em] overflow-hidden py-2">
@@ -158,7 +158,7 @@ export default function Skills() {
 
         {/* Bottom Area: 2 Column Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 w-full">
-          
+
           {/* LEFT COLUMN: Frontend & Frameworks */}
           <div className="skill-left flex flex-col gap-6">
             <h4 className="text-[11px] text-white/40 uppercase tracking-[0.3em] font-bold border-b border-white/10 pb-4 mb-2">
@@ -171,7 +171,7 @@ export default function Skills() {
                     <img src={skill.icon} alt={skill.name} className="w-full h-full object-contain filter drop-shadow-md grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" />
                   </div>
                   <span className="text-xs text-white/50 font-mono group-hover:text-white transition-colors">{skill.name}</span>
-                  
+
                   {/* Hover Glow */}
                   <div className="absolute inset-0 blur-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none rounded-2xl" style={{ backgroundColor: skill.shadow }} />
                 </div>
@@ -205,7 +205,7 @@ export default function Skills() {
 
       {/* Global Overlays */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,#030303_100%)] opacity-70" />
-      <div className="absolute inset-0 pointer-events-none opacity-[0.02] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      {/* <div className="absolute inset-0 pointer-events-none opacity-[0.02] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" /> */}
     </div>
   );
 }

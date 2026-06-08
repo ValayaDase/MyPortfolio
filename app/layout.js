@@ -7,6 +7,8 @@ import GlobalCursor from "@/components/GlobalCursor";
 import PreLoader from "@/components/PreLoader";
 import Navbar from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
@@ -24,6 +26,12 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${inter.variable} ${mono.variable}`}>
       <body className="bg-[#0a0a0a] text-white antialiased overflow-x-hidden">
         <SmoothScroll>
+
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          theme="dark"
+        />
 
         {/* global cursor */}
         <GlobalCursor />

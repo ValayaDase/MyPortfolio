@@ -6,7 +6,7 @@ import gsap from 'gsap';
 const PreLoader = ({ onComplete }) => {
     const [progress, setProgress] = useState(0);
     const containerRef = useRef(null);
-    
+
     const firstName = "VALAYA".split("");
     const lastName = "DASE".split("");
 
@@ -22,11 +22,11 @@ const PreLoader = ({ onComplete }) => {
             });
 
             // 1. INITIAL STATE: Letters chote aur blur honge
-            gsap.set(".letter", { 
-                opacity: 0, 
-                scale: 0, 
+            gsap.set(".letter", {
+                opacity: 0,
+                scale: 0,
                 filter: "blur(15px)",
-                display: "inline-block" 
+                display: "inline-block"
             });
             gsap.set(".loader-line", { width: 0 });
             gsap.set(".name-wrapper", { scale: 0.9 });
@@ -48,7 +48,7 @@ const PreLoader = ({ onComplete }) => {
                 duration: 1.8,
                 stagger: {
                     each: 0.12,
-                    from: "center" 
+                    from: "center"
                 },
                 ease: "expo.out",
             }, 0.3);
@@ -89,7 +89,7 @@ const PreLoader = ({ onComplete }) => {
 
     return (
         <div ref={containerRef} className="fixed inset-0 z-[9999] overflow-hidden bg-[#050505] touch-none">
-            
+
             {/* Background Strips */}
             <div className="absolute inset-0 flex pointer-events-none">
                 {[...Array(12)].map((_, i) => (
@@ -98,11 +98,11 @@ const PreLoader = ({ onComplete }) => {
             </div>
 
             {/* Cinematic Overlay */}
-            <div className="absolute inset-0 opacity-[0.04] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+            {/* <div className="absolute inset-0 opacity-[0.04] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div> */}
 
             {/* Content Container */}
             <div className="relative z-10 flex flex-col items-center justify-center h-full w-full px-4">
-                
+
                 <div className="name-wrapper flex flex-col items-center">
                     {/* Compact Name Reveal */}
                     <div className="flex flex-wrap justify-center gap-x-4 md:gap-x-8 mb-8">

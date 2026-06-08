@@ -5,6 +5,8 @@ import { FaLinkedinIn, FaGithub, FaTwitter, FaEnvelope } from "react-icons/fa";
 import Lottie from "lottie-react";
 import contactAnimation from "../public/contactUs.json";
 import FuturisticBackground from "./FuturisticBackground";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -21,7 +23,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
   },
 };
 
@@ -29,6 +31,9 @@ export default function Contact() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { amount: 0.2 });
   const lottieRef = useRef(null);
+  const formRef = useRef();
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isInView) {
@@ -38,8 +43,50 @@ export default function Contact() {
     }
   }, [isInView]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    const formData = {
+      name: formRef.current.user_name.value,
+      email: formRef.current.user_email.value,
+      subject: formRef.current.user_subject.value,
+      message: formRef.current.user_message.value,
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        toast.success("Message sent successfully!");
+
+        formRef.current.reset();
+      } else {
+        toast.error("Failed to send message");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
+
+    setLoading(false);
+  };
+
   return (
-    <section id="contact" ref={sectionRef} className="py-24 bg-[#0a0a0a] border-t border-white/5 relative overflow-hidden">
+    <section
+      id="contact"
+      ref={sectionRef}
+      className="py-24 bg-[#0a0a0a] border-t border-white/5 relative overflow-hidden"
+    >
       {/* <FuturisticBackground /> */}
       <motion.div
         variants={containerVariants}
@@ -47,25 +94,35 @@ export default function Contact() {
         animate={isInView ? "visible" : "hidden"}
         className="max-w-6xl mx-auto px-6"
       >
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-
           {/* Left Side: Connect Info */}
           <div>
-            <motion.span variants={itemVariants} className="font-mono text-blue-500 text-[10px] uppercase tracking-[0.5em] block mb-4">
+            <motion.span
+              variants={itemVariants}
+              className="font-mono text-blue-500 text-[10px] uppercase tracking-[0.5em] block mb-4"
+            >
               // 05. What's Next?
             </motion.span>
 
-            <motion.h2 variants={itemVariants} className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-8">
+            <motion.h2
+              variants={itemVariants}
+              className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-8"
+            >
               Get In Touch<span className="text-blue-500">.</span>
             </motion.h2>
 
-            <motion.p variants={itemVariants} className="text-white/40 text-lg leading-relaxed max-w-md mb-10">
+            <motion.p
+              variants={itemVariants}
+              className="text-white/40 text-lg leading-relaxed max-w-md mb-10"
+            >
               Currently looking for new opportunities or just a friendly hello.
               My inbox is always open.
             </motion.p>
 
-            <motion.div variants={itemVariants} className="w-full max-w-[380px]">
+            <motion.div
+              variants={itemVariants}
+              className="w-full max-w-[380px]"
+            >
               <Lottie
                 lottieRef={lottieRef}
                 animationData={contactAnimation}
@@ -76,36 +133,73 @@ export default function Contact() {
           </div>
 
           {/* Right Side: Contact Form */}
-          <motion.div variants={itemVariants} className="bg-white/[0.02] border border-white/5 p-8 md:p-10 rounded-[2.5rem] backdrop-blur-sm">
-            <form className="space-y-6">
+          <motion.div
+            variants={itemVariants}
+            className="bg-white/[0.02] border border-white/5 p-8 md:p-10 rounded-[2.5rem] backdrop-blur-sm"
+          >
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[10px] font-mono uppercase tracking-widest text-white/30 ml-2">Name</label>
-                  <input type="text" placeholder="John Doe" className="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all w-full" />
+                  <label className="text-[10px] font-mono uppercase tracking-widest text-white/30 ml-2">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    name="user_name"
+                    placeholder="John Doe"
+                    className="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all w-full"
+                  />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[10px] font-mono uppercase tracking-widest text-white/30 ml-2">Email</label>
-                  <input type="email" placeholder="john@example.com" className="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all w-full" />
+                  <label className="text-[10px] font-mono uppercase tracking-widest text-white/30 ml-2">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="user_email"
+                    placeholder="john@example.com"
+                    className="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all w-full"
+                  />
                 </div>
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-mono uppercase tracking-widest text-white/30 ml-2">Subject</label>
-                <input type="text" placeholder="Project Inquiry" className="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all w-full" />
+                <label className="text-[10px] font-mono uppercase tracking-widest text-white/30 ml-2">
+                  Subject
+                </label>
+                <input
+                  type="text"
+                  name="user_subject"
+                  placeholder="Project Inquiry"
+                  className="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all w-full"
+                />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-mono uppercase tracking-widest text-white/30 ml-2">Message</label>
-                <textarea rows="4" placeholder="Tell me about your project..." className="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all w-full resize-none"></textarea>
+                <label className="text-[10px] font-mono uppercase tracking-widest text-white/30 ml-2">
+                  Message
+                </label>
+                <textarea
+                  rows="4"
+                  name="user_message"
+                  placeholder="Tell me about your project..."
+                  className="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all w-full resize-none"
+                ></textarea>
               </div>
 
-              <button type="button" className="relative overflow-hidden w-full py-5 bg-blue-600 text-white font-bold rounded-2xl transition-all shadow-[0_0_30px_rgba(37,99,235,0.3)] active:scale-[0.98] group mag">
+              <button
+                type="submit"
+                disabled={loading}
+                className="relative overflow-hidden w-full py-5 bg-blue-600 text-white font-bold rounded-2xl transition-all shadow-[0_0_30px_rgba(37,99,235,0.3)] active:scale-[0.98] group mag disabled:opacity-70"
+              >
                 <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-cyan-400 to-blue-500 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-                <span className="relative z-10">Send Message</span>
+
+                <span className="relative z-10">
+                  {loading ? "Sending..." : "Send Message"}
+                </span>
               </button>
             </form>
           </motion.div>
-
         </div>
       </motion.div>
     </section>

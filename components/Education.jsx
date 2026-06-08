@@ -74,7 +74,7 @@ export default function Education() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "+=250%", 
+          end: "+=250%",
           pin: true,
           scrub: 1,
           pinSpacing: true,
@@ -88,29 +88,29 @@ export default function Education() {
       tl.to({}, { duration: 0.15 });
 
       // 1. Title Animation: Blur to Clear (Top Row)
-      tl.fromTo(".edu-char", 
+      tl.fromTo(".edu-char",
         { y: "100%", opacity: 0, filter: "blur(12px)", rotateX: -30 },
-        { 
-          y: "0%", 
-          opacity: 1, 
-          filter: "blur(0px)", 
-          rotateX: 0, 
-          stagger: 0.02, 
-          duration: 0.8, 
-          ease: "power3.out" 
+        {
+          y: "0%",
+          opacity: 1,
+          filter: "blur(0px)",
+          rotateX: 0,
+          stagger: 0.02,
+          duration: 0.8,
+          ease: "power3.out"
         }
       );
 
       // 2. Horizontal Cards Entry: Below the Title
       tl.fromTo(".edu-card-horiz",
         { x: "100vw", opacity: 0, filter: "blur(8px)" },
-        { 
-          x: "0%", 
-          opacity: 1, 
-          filter: "blur(0px)", 
-          stagger: 0.3, 
-          duration: 1.2, 
-          ease: "power2.out" 
+        {
+          x: "0%",
+          opacity: 1,
+          filter: "blur(0px)",
+          stagger: 0.3,
+          duration: 1.2,
+          ease: "power2.out"
         },
         "-=0.4"
       );
@@ -127,7 +127,7 @@ export default function Education() {
 
   return (
     <div ref={sectionRef} className="relative w-full bg-[#030303] overflow-hidden z-[60]">
-      
+
       {/* Background Visuals */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
         <Canvas>
@@ -141,9 +141,9 @@ export default function Education() {
       </div>
 
       <section className="relative h-screen w-full flex flex-col items-center justify-center px-6 md:px-10 lg:px-24">
-        
+
         <div className="relative z-10 w-full max-w-7xl flex flex-col gap-12 md:gap-24">
-          
+
           {/* Top Row: Title */}
           <div className="w-full flex flex-col items-start md:items-center text-left md:text-center">
             <div className="flex items-center gap-4 mb-4">
@@ -152,7 +152,7 @@ export default function Education() {
                   // 02. Education
               </span>
             </div>
-            
+
             <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-none text-white w-full">
               {title.map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em] overflow-hidden py-2">
@@ -165,25 +165,25 @@ export default function Education() {
           {/* Bottom Row: Horizontal Glide Cards */}
           <div ref={cardsContainerRef} className="flex flex-col md:flex-row flex-wrap md:flex-nowrap items-center justify-center gap-6 w-full">
             {educationData.map((edu, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="edu-card-horiz w-full md:w-[380px] p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 backdrop-blur-3xl transition-all duration-500 hover:border-blue-500/30 group relative"
               >
                 <div className="flex justify-between items-center mb-6">
                   <span className="text-blue-500 font-mono text-[10px] tracking-widest">{edu.year}</span>
                   <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                 </div>
-                
+
                 <h4 className="text-xl md:text-2xl font-bold mb-2 text-white group-hover:text-blue-400 transition-colors">
-                    {edu.degree}
+                  {edu.degree}
                 </h4>
                 <p className="text-white/40 text-sm mb-6 font-light">
-                    {edu.institute}
+                  {edu.institute}
                 </p>
-                
+
                 <div className="h-[1px] w-12 bg-white/10 group-hover:w-full transition-all duration-700 mb-6" />
                 <p className="text-white/20 text-xs leading-relaxed font-light line-clamp-3">
-                    {edu.details}
+                  {edu.details}
                 </p>
 
                 {/* Subtle Hover Glow */}
@@ -197,7 +197,7 @@ export default function Education() {
 
       {/* Overlays */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,#030303_100%)] opacity-70" />
-      <div className="absolute inset-0 pointer-events-none opacity-[0.02] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      {/* <div className="absolute inset-0 pointer-events-none opacity-[0.02] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" /> */}
     </div>
   );
 }

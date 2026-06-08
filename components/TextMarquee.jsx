@@ -13,7 +13,7 @@ export default function TextMarquee() {
   const bottomMarqueeRef = useRef(null);
 
   const skills = [
-    "React", "Next.js", "Java", "MongoDB", "Node.js", 
+    "React", "Next.js", "Java", "MongoDB", "Node.js",
     "TailwindCSS", "PostgreSQL", "Express", "TypeScript", "AWS"
   ];
 
@@ -25,8 +25,8 @@ export default function TextMarquee() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 80%", // Start when section enters viewport
-          end: "bottom 20%", // End before it leaves viewport
+          start: "top 100%", // Start when section enters viewport
+          end: "bottom 40%", // End before it leaves viewport
           scrub: 1, // Smooth scrubbing, NO pinning so user doesn't wait
         }
       });
@@ -62,8 +62,8 @@ export default function TextMarquee() {
   const Highlight = ({ children }) => (
     <span className="relative inline-block text-transparent whitespace-nowrap" style={{ WebkitTextStroke: "1px rgba(255,255,255,0.4)" }}>
       {children}
-      <span 
-        className="liquid-fill absolute left-0 top-0 w-full h-full bg-gradient-to-t from-blue-600 via-blue-500 to-cyan-400 bg-clip-text text-transparent select-none drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" 
+      <span
+        className="liquid-fill absolute left-0 top-0 w-full h-full bg-gradient-to-t from-blue-600 via-blue-500 to-cyan-400 bg-clip-text text-transparent select-none drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]"
         style={{ WebkitTextStroke: "0px", clipPath: "inset(100% 0 0 0)" }}
         aria-hidden="true"
       >
@@ -73,8 +73,8 @@ export default function TextMarquee() {
   );
 
   return (
-    <section 
-      ref={sectionRef} 
+    <section
+      ref={sectionRef}
       // YAHAN CHANGE KIYA HAI: pt-24 pb-48 md:pt-32 md:pb-64 aur z-10 rakha hai
       className="relative w-full pt-24 pb-48 md:pt-32 md:pb-64 bg-[#030303] flex flex-col justify-center overflow-hidden z-10 border-t border-white/5"
     >

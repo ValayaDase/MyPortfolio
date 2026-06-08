@@ -153,9 +153,9 @@ export default function About() {
         <div className="flex flex-col justify-center w-full">
           <div className="flex items-center gap-4 mb-6 md:mb-10">
             <div className="h-[1px] w-8 bg-blue-500/50" />
-            <span className="font-mono text-blue-500 text-[10px] md:text-xs uppercase tracking-[0.5em] opacity-80">
+            {/* <span className="font-mono text-blue-500 text-[10px] md:text-xs uppercase tracking-[0.5em] opacity-80">
               System.Init
-            </span>
+            </span> */}
           </div>
 
           {/* Fixed Height Wrapper to prevent layout shift */}

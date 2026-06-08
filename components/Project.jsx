@@ -53,13 +53,13 @@ export default function Projects() {
 
     let ctx = gsap.context(() => {
       const track = trackRef.current;
-      
+
       // Calculate total width of the track
       const totalWidth = track.scrollWidth;
 
       // Start the track off-screen to the right, and pull it completely to the left
-      gsap.fromTo(track, 
-        {x: window.innerWidth * 0.7 }, // Start at the right edge
+      gsap.fromTo(track,
+        { x: window.innerWidth * 0.7 }, // Start at the right edge
         {
           x: -totalWidth + window.innerWidth, // Scroll until the last card hits the left
           ease: "none",
@@ -69,7 +69,7 @@ export default function Projects() {
             end: () => `+=${totalWidth + window.innerWidth}`, // Pin duration based on travel distance
             pin: true,
             scrub: 1, // Smooth scrolling transition
-            pinSpacing: true, 
+            pinSpacing: true,
             invalidateOnRefresh: true,
           },
         }
@@ -90,13 +90,13 @@ export default function Projects() {
       </div>
 
       <div className="relative z-10 w-full flex flex-col items-center pt-10">
-        
+
         {/* Title and subtitle merged onto a single perfectly sized h2 line */}
         <div className="flex flex-row items-baseline justify-center gap-4 mb-10 w-full px-4">
-            <h2 className="text-white text-3xl font-bold tracking-tighter m-0 p-0">My Works.</h2>
-            <span className="text-gray-500 font-mono text-sm uppercase tracking-[0.2em] m-0 p-0">Hover to explore details</span>
+          <h2 className="text-white text-3xl font-bold tracking-tighter m-0 p-0">My Works.</h2>
+          <span className="text-gray-500 font-mono text-sm uppercase tracking-[0.2em] m-0 p-0">Hover to explore details</span>
         </div>
-        
+
         {/* Track container ensures cards don't wrap and size calculations are exact */}
         <div ref={trackRef} className="flex flex-nowrap gap-[2vw] px-[2vw] items-center w-max">
           {projects.map((proj, i) => (
@@ -198,26 +198,26 @@ function ProjectCard({ project }) {
         </div>
 
         <div className="relative w-full flex-grow min-h-[120px] max-h-[160px] bg-black/40 rounded-xl border border-white/5 mb-4 md:mb-6 overflow-hidden">
-            <div className="flex gap-1.5 p-2.5 border-b border-white/5 bg-white/5">
-                <div className="w-1.5 h-1.5 rounded-full bg-red-500/20" />
-                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/20" />
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500/20" />
-            </div>
-            <div className="p-3 w-full h-full flex items-center justify-center opacity-20 group-hover:opacity-100 transition-all duration-500 relative">
-                <Image 
-                   src={project.image} 
-                   alt={project.title} 
-                   fill
-                   className="object-contain p-4" 
-                   priority={project.number === "01"} 
-                />
-            </div>
+          <div className="flex gap-1.5 p-2.5 border-b border-white/5 bg-white/5">
+            <div className="w-1.5 h-1.5 rounded-full bg-red-500/20" />
+            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/20" />
+            <div className="w-1.5 h-1.5 rounded-full bg-green-500/20" />
+          </div>
+          <div className="p-3 w-full h-full flex items-center justify-center opacity-20 group-hover:opacity-100 transition-all duration-500 relative">
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              className="object-contain p-4"
+              priority={project.number === "01"}
+            />
+          </div>
         </div>
 
         <h3 className="text-white text-xl md:text-2xl font-bold mb-2 tracking-tight transition-colors duration-300">
           {project.title}
         </h3>
-        
+
         <p className="text-gray-400 text-xs md:text-sm leading-relaxed line-clamp-2 md:line-clamp-3 transition-colors duration-300">
           {project.desc}
         </p>

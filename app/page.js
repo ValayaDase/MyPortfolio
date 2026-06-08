@@ -4,25 +4,24 @@ import Education from "@/components/Education";
 import Projects from "@/components/Project";
 import Contact from "@/components/Contact";
 import Skills from "@/components/Skills";
+import Experience from "@/components/Experience";
 import TextMarquee from "@/components/TextMarquee";
 import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
     <div className="flex flex-col">
-      <Hero />
-      <About />
+      <section><Hero /></section>
+      <section id="about"><About /></section>
+      <section id="skills"><Skills /></section>
+      <section id="experience"><Experience /></section>
+      <section id="projects"><Projects /></section>
+      <section><TextMarquee /></section>
+      <section id="contact"><Contact /></section>
+      <section><Footer /></section>
+
       {/* <Education /> */}
-      <Skills />
       
-      <Projects />
-     <TextMarquee /> 
-      <Contact />
-      <Footer />
-      {/* Future sections (Skills, Projects, Contact) yahan aayenge */}
-      {/* <section className="h-[50vh] flex items-center justify-center border-t border-white/5 opacity-20">
-        <p className="font-mono text-xs uppercase tracking-[1em]">Stay Tuned for More</p>
-      </section> */}
     </div>
   );
 }
