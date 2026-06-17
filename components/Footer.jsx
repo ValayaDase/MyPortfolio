@@ -201,7 +201,7 @@ export default function Footer() {
               key={index}
               className="font-black leading-none cursor-default inline-block select-none transition-all duration-300 mx-[-0.02em]"
               style={{
-                fontSize: "clamp(2.5rem, 10vw, 10rem)",
+                fontSize: "clamp(1.5rem, 7.5vw, 10rem)",
                 color: "rgba(255, 255, 255, 0.15)",
               }}
               onMouseEnter={(e) => {

@@ -1,12 +1,19 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 export default function GlobalCursor() {
   const cursorRef = useRef(null);
   const followerRef = useRef(null);
+  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
+    // Check if device is a touch screen (coarse pointer)
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+    if (isTouch) return;
+
+    setEnabled(true);
+
     // 1. Mouse Move Tracking (Desktop Only)
     const xToCursor = gsap.quickTo(cursorRef.current, "x", { duration: 0.1, ease: "power2.out" });
     const yToCursor = gsap.quickTo(cursorRef.current, "y", { duration: 0.1, ease: "power2.out" });
@@ -89,7 +96,9 @@ export default function GlobalCursor() {
         el.removeEventListener("mouseleave", leaveMagnetic);
       });
     };
-  }, []);
+  }, [enabled]);
+
+  if (!enabled) return null;
 
   return (
     <>

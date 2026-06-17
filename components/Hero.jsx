@@ -32,8 +32,14 @@ const Hero = () => {
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const ctx = gsap.context(() => {
-      // The timeline is tied to the invisible scroll track
+    const mm = gsap.matchMedia();
+
+    mm.add({
+      isDesktop: "(min-width: 768px)",
+      isMobile: "(max-width: 767px)"
+    }, (context) => {
+      const { isDesktop } = context.conditions;
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: scrollTrackRef.current,
@@ -43,98 +49,187 @@ const Hero = () => {
         },
       });
 
-      tl
-        // Phase 1: Entire Card Group scales down slightly
-        .to(cardGroupRef.current, {
-          scale: 0.85,
-          duration: 1,
-          ease: "power2.inOut",
-        })
+      if (isDesktop) {
+        tl
+          // Phase 1: Entire Card Group scales down slightly
+          .to(cardGroupRef.current, {
+            scale: 0.85,
+            duration: 1,
+            ease: "power2.inOut",
+          })
 
-        // Phase 2: Card Group moves RIGHT and Flips in 3D
-        .addLabel("moveRight")
-        .to(
-          cardGroupRef.current,
-          {
-            x: "22vw", // Move to right side
-            rotateY: -20, // 3D Tilt
-            rotateX: 10,
-            duration: 3,
-            ease: "power3.inOut",
-          },
-          "moveRight",
-        )
+          // Phase 2: Card Group moves RIGHT and Flips in 3D
+          .addLabel("moveRight")
+          .to(
+            cardGroupRef.current,
+            {
+              x: "22vw", // Move to right side
+              rotateY: -20, // 3D Tilt
+              rotateX: 10,
+              duration: 3,
+              ease: "power3.inOut",
+            },
+            "moveRight",
+          )
 
-        // Intensify the glow on the backplate as it moves
-        .to(
-          cardBackplateRef.current,
-          {
-            boxShadow: "0 0 80px rgba(0, 255, 255, 0.4)",
-            borderColor: "rgba(0, 255, 255, 0.5)",
-            duration: 3,
-          },
-          "moveRight",
-        )
+          // Intensify the glow on the backplate as it moves
+          .to(
+            cardBackplateRef.current,
+            {
+              boxShadow: "0 0 80px rgba(0, 255, 255, 0.4)",
+              borderColor: "rgba(0, 255, 255, 0.5)",
+              duration: 3,
+            },
+            "moveRight",
+          )
 
-        // Phase 3: TRUE Image Pop-Out (Fixed Z-Fighting)
-        // Notice 'z: 50' which physically pushes the image in front of the glass in 3D space
-        .to(
-          imageWrapperRef.current,
-          {
-            scale: 1.25,
-            x: -30, // Shift left out of bounds
-            y: -40, // Shift up out of bounds
-            z: 50, // <-- Pushes image forward so it doesn't slice through the glass
-            rotateY: 10, // Counter-rotation to make it look physically separated
-            boxShadow: "-20px 40px 60px rgba(0,0,0,0.9)", // Massive drop shadow onto the card
-            duration: 2.5,
-            ease: "power2.out",
-          },
-          "-=1.5",
-        )
+          // Phase 3: TRUE Image Pop-Out
+          .to(
+            imageWrapperRef.current,
+            {
+              scale: 1.25,
+              x: -30, // Shift left out of bounds
+              y: -40, // Shift up out of bounds
+              z: 50, // Pushes image forward
+              rotateY: 10, // Counter-rotation
+              boxShadow: "-20px 40px 60px rgba(0,0,0,0.9)", // Drop shadow
+              duration: 2.5,
+              ease: "power2.out",
+            },
+            "-=1.5",
+          )
 
-        // Phase 4: Particle 3D Assembly (Text forms on the Left)
-        .fromTo(
-          ".particle-char",
-          {
-            opacity: 0,
-            x: () => gsap.utils.random(-400, 0),
-            y: () => gsap.utils.random(-300, 300),
-            z: () => gsap.utils.random(200, 800), // Start close to camera
-            filter: "blur(20px)",
-            scale: 0,
-          },
-          {
-            opacity: 1,
-            x: 0,
-            y: 0,
-            z: 0,
-            filter: "blur(0px)",
-            scale: 1,
-            duration: 3,
-            stagger: 0.03,
-            ease: "power3.out",
-          },
-          "moveRight+=0.5", // Sync with card moving
-        )
+          // Phase 4: Particle 3D Assembly (Text forms on the Left)
+          .fromTo(
+            ".particle-char",
+            {
+              opacity: 0,
+              x: () => gsap.utils.random(-400, 0),
+              y: () => gsap.utils.random(-300, 300),
+              z: () => gsap.utils.random(200, 800), // Start close to camera
+              filter: "blur(20px)",
+              scale: 0,
+            },
+            {
+              opacity: 1,
+              x: 0,
+              y: 0,
+              z: 0,
+              filter: "blur(0px)",
+              scale: 1,
+              duration: 3,
+              stagger: 0.03,
+              ease: "power3.out",
+            },
+            "moveRight+=0.5",
+          )
 
-        // Phase 5: Fade in description and UI elements smoothly
-        .fromTo(
-          ".content-fade",
-          { opacity: 0, y: 40, filter: "blur(10px)" },
-          {
-            opacity: 1,
-            y: 0,
-            filter: "blur(0px)",
-            duration: 2,
-            stagger: 0.15,
-            ease: "power2.out",
-          },
-          "moveRight+=1.5",
-        );
+          // Phase 5: Fade in description and UI elements smoothly
+          .fromTo(
+            ".content-fade",
+            { opacity: 0, y: 40, filter: "blur(10px)" },
+            {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              duration: 2,
+              stagger: 0.15,
+              ease: "power2.out",
+            },
+            "moveRight+=1.5",
+          );
+      } else {
+        // Mobile Animation Sequence
+        tl
+          // Phase 1: Card Group scales down
+          .to(cardGroupRef.current, {
+            scale: 0.8,
+            duration: 1,
+            ease: "power2.inOut",
+          })
+
+          // Phase 2: Card Group moves UP and tilts in 3D
+          .addLabel("moveUp")
+          .to(
+            cardGroupRef.current,
+            {
+              y: "0", // Move up on mobile
+              rotateX: 12,
+              rotateY: -8,
+              duration: 3,
+              ease: "power3.inOut",
+            },
+            "moveUp",
+          )
+
+          // Glow backplate
+          .to(
+            cardBackplateRef.current,
+            {
+              boxShadow: "0 0 60px rgba(0, 255, 255, 0.35)",
+              borderColor: "rgba(0, 255, 255, 0.4)",
+              duration: 3,
+            },
+            "moveUp",
+          )
+
+          // Phase 3: Image Pop-Out (Less aggressive)
+          .to(
+            imageWrapperRef.current,
+            {
+              scale: 1.15,
+              y: -15,
+              z: 30,
+              rotateX: -5,
+              boxShadow: "0 15px 30px rgba(0,0,0,0.8)",
+              duration: 2.5,
+              ease: "power2.out",
+            },
+            "-=1.5",
+          )
+
+          // Phase 4: Particle 3D Assembly (Text forms below the card)
+          .fromTo(
+            ".particle-char",
+            {
+              opacity: 0,
+              y: () => gsap.utils.random(100, 300),
+              z: () => gsap.utils.random(100, 400),
+              filter: "blur(10px)",
+              scale: 0.5,
+            },
+            {
+              opacity: 1,
+              x: 0,
+              y: 0,
+              z: 0,
+              filter: "blur(0px)",
+              scale: 1,
+              duration: 3,
+              stagger: 0.02,
+              ease: "power3.out",
+            },
+            "moveUp+=0.5",
+          )
+
+          // Phase 5: Fade in description and UI elements
+          .fromTo(
+            ".content-fade",
+            { opacity: 0, y: 30, filter: "blur(5px)" },
+            {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              duration: 2,
+              stagger: 0.10,
+              ease: "power2.out",
+            },
+            "moveUp+=1.2",
+          );
+      }
     });
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   const leftHalfVariants = {
@@ -155,7 +250,6 @@ const Hero = () => {
     },
   };
 
-  // Content fade-in variant
   const fadeInVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
@@ -167,40 +261,38 @@ const Hero = () => {
 
   return (
     <div className="relative w-full bg-[#050505]">
-      {/* --- THE FIXED STAGE --- 
-        This stays locked in the background. It does NOT scroll. 
-        Animations happen here based on how far down the user scrolls.
-      */}
+      {/* --- THE FIXED STAGE --- */}
       <div
         className="fixed top-0 left-0 w-full h-screen z-0 overflow-hidden"
         style={{ perspective: "2000px" }}
       >
-        <div className="container mx-auto max-w-[1400px] h-full flex items-center justify-center relative px-8">
-          {/* CONTENT: Assembles on the Left */}
-          <div className="absolute left-[5%] md:left-[10%] w-[50%] z-20 pointer-events-none">
-            <h1 className="text-white text-6xl md:text-8xl font-black tracking-tighter leading-none mb-6">
+        <div className="container mx-auto max-w-[1400px] h-full flex flex-col-reverse md:flex-row items-center justify-center relative px-6 md:px-8 gap-8 md:gap-0">
+
+          {/* CONTENT: Assembles on the Left (Desktop) or Bottom (Mobile) */}
+          <div className="relative md:absolute md:left-[10%] w-full md:w-[50%] z-20 pointer-events-none flex flex-col items-center md:items-start text-center md:text-left mb-6 md:mb-0">
+            <h1 className="text-white text-4xl sm:text-5xl md:text-8xl font-black tracking-tighter leading-none mb-4 md:mb-6">
               <SplitText text="VALAYA" /> <br />
               <span className="text-cyan-500">
                 <SplitText text="DASE." />
               </span>
             </h1>
 
-            <div className="content-fade opacity-0 pointer-events-auto">
-              <p className="text-white/70 text-lg md:text-xl max-w-md font-light leading-relaxed mb-8">
+            <div className="content-fade opacity-0 pointer-events-auto flex flex-col items-center md:items-start">
+              <p className="text-white/70 text-sm md:text-xl max-w-sm md:max-w-md font-light leading-relaxed mb-6 md:mb-8">
                 Full-stack developer building immersive, high-performance
                 digital experiences. Focused on bridging scalable logic with
                 fluid, cinematic motion design.
               </p>
 
-              <div className="flex flex-wrap items-center gap-6">
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 md:gap-6">
                 {/* LinkedIn */}
                 <a
                   target="_blank"
                   href="https://www.linkedin.com/in/valaya-dase-9b17a8331/"
-                  className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#0A66C2] hover:border-[#0A66C2] hover:text-white transition-all duration-300"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#0A66C2] hover:border-[#0A66C2] hover:text-white transition-all duration-300"
                 >
                   <svg
-                    className="w-4 h-4"
+                    className="w-3.5 h-3.5 md:w-4 md:h-4"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -212,10 +304,10 @@ const Hero = () => {
                 <a
                   target="_blank"
                   href="https://github.com/ValayaDase"
-                  className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:border-white hover:text-black transition-all duration-300"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:border-white hover:text-black transition-all duration-300"
                 >
                   <svg
-                    className="w-5 h-5"
+                    className="w-4 h-4 md:w-5 md:h-5"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -227,10 +319,10 @@ const Hero = () => {
                 <a
                   target="_blank"
                   href="https://www.instagram.com/_valaya_.02"
-                  className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#E1306C] hover:border-[#E1306C] hover:text-white transition-all duration-300"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#E1306C] hover:border-[#E1306C] hover:text-white transition-all duration-300"
                 >
                   <svg
-                    className="w-5 h-5"
+                    className="w-4 h-4 md:w-5 md:h-5"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -238,15 +330,10 @@ const Hero = () => {
                   </svg>
                 </a>
 
-                {/* Liquid Fill Button */}
-                {/* <button className="relative overflow-hidden group px-8 py-4 rounded-full border border-cyan-500 text-cyan-400 font-bold uppercase tracking-widest text-xs transition-colors">
-                  <span className="absolute inset-x-0 bottom-0 h-0 bg-cyan-500 transition-all duration-300 ease-out group-hover:h-full z-0"></span>
-                  <span className="relative z-10 group-hover:text-black transition-colors duration-300">Download Resume</span>
-                </button> */}
-                <a  href="/resume.pdf" download="Valaya_Dase_Resume.pdf" target="_blank" rel="noopener noreferrer">
-                  <button className="relative overflow-hidden group px-8 py-4 rounded-full border border-cyan-500 text-cyan-400 font-bold uppercase tracking-widest text-xs transition-colors">
+                {/* Resume download button */}
+                <a href="/resume.pdf" download="Valaya_Dase_Resume.pdf" target="_blank" rel="noopener noreferrer">
+                  <button className="relative overflow-hidden group px-6 py-3 md:px-8 md:py-4 rounded-full border border-cyan-500 text-cyan-400 font-bold uppercase tracking-widest text-[10px] md:text-xs transition-colors">
                     <span className="absolute inset-x-0 bottom-0 h-0 bg-cyan-500 transition-all duration-300 ease-out group-hover:h-full z-0"></span>
-
                     <span className="relative z-10 group-hover:text-black transition-colors duration-300">
                       Download Resume
                     </span>
@@ -259,20 +346,20 @@ const Hero = () => {
           {/* CARD MASTER GROUP: Holds both backplate and image */}
           <div
             ref={cardGroupRef}
-            className="relative z-10 w-[300px] h-[450px] md:w-[340px] md:h-[500px] shrink-0"
+            className="relative z-10 w-[220px] h-[330px] sm:w-[280px] sm:h-[420px] md:w-[340px] md:h-[500px] shrink-0 mt-16 md:mt-0"
             style={{ transformStyle: "preserve-3d" }}
           >
             {/* 1. The Glowing Backplate (Pushed slightly back) */}
             <div
               ref={cardBackplateRef}
-              className="absolute inset-0 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-[0_0_30px_rgba(0,0,0,0.8)]"
+              className="absolute inset-0 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[1.5rem] md:rounded-[2rem] shadow-[0_0_30px_rgba(0,0,0,0.8)]"
               style={{ transform: "translateZ(-1px)" }}
             />
 
             {/* 2. The Image Wrapper (Pulled slightly forward initially) */}
             <div
               ref={imageWrapperRef}
-              className="absolute inset-4 z-20 rounded-[1.5rem] overflow-hidden bg-[#050505]"
+              className="absolute inset-3 md:inset-4 z-20 rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden bg-[#050505]"
               style={{ transform: "translateZ(1px)" }}
             >
               <Image
@@ -281,11 +368,11 @@ const Hero = () => {
                 fill
                 className="object-cover"
                 priority
-                sizes="(max-width: 768px) 300px, 340px"
+                sizes="(max-width: 768px) 220px, (max-width: 1200px) 280px, 340px"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
-              <div className="absolute bottom-6 left-0 w-full text-center z-20">
-                <p className="text-white font-mono text-xs tracking-widest uppercase shadow-black drop-shadow-md">
+              <div className="absolute bottom-4 md:bottom-6 left-0 w-full text-center z-20">
+                <p className="text-white font-mono text-[10px] md:text-xs tracking-widest uppercase shadow-black drop-shadow-md">
                   Valaya Dase
                 </p>
               </div>
@@ -294,25 +381,18 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* --- THE SCROLL TRACK --- 
-        This is invisible. It creates the actual scrollable space that the browser reads.
-        250vh = 2.5 screens worth of scrolling for the animation to complete.
-      */}
+      {/* --- THE SCROLL TRACK --- */}
       <div
         ref={scrollTrackRef}
         className="relative z-10 w-full h-[250vh] pointer-events-none"
       />
 
-      {/* --- ABOUT SECTION --- 
-        Because the Hero stage is `fixed`, this section will naturally scroll UP 
-        over the Hero section as you scroll past the 250vh invisible track. 
-        Zero gaps. Perfect overlap.
-      */}
-      <section className="relative z-30 bg-black text-white min-h-screen rounded-t-[4rem] shadow-[0_-30px_60px_rgba(0,0,0,0.9)] flex items-center justify-center px-4 overflow-hidden">
-        <div className="max-w-7xl mx-auto w-full text-center font-bold text-xl sm:text-2xl md:text-3xl lg:text-5xl tracking-tight text-gray-300 select-none flex flex-col gap-4">
+      {/* --- ABOUT SECTION OVERLAP --- */}
+      <section className="relative z-30 bg-black text-white min-h-screen rounded-t-[2.5rem] md:rounded-t-[4rem] shadow-[0_-30px_60px_rgba(0,0,0,0.9)] flex items-center justify-center px-4 overflow-hidden">
+        <div className="max-w-7xl mx-auto w-full text-center font-bold text-base sm:text-xl md:text-3xl lg:text-5xl tracking-tight text-gray-300 select-none flex flex-col gap-3 md:gap-4">
+
           {/* --- Line 1 Split --- */}
-          <div className="flex w-full justify-center overflow-hidden py-2">
-            {/* Left half coming from left */}
+          <div className="flex w-full justify-center overflow-hidden py-1 md:py-2">
             <motion.div
               initial={{ x: "-40%", opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
@@ -323,7 +403,6 @@ const Hero = () => {
               I <span className="text-[#3b82f6]">build</span> robust full-stack
             </motion.div>
 
-            {/* Right half coming from right */}
             <motion.div
               initial={{ x: "40%", opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
@@ -336,8 +415,7 @@ const Hero = () => {
           </div>
 
           {/* --- Line 2 Split --- */}
-          <div className="flex flex-wrap w-full justify-center items-center py-2">
-            {/* Left half coming from left */}
+          <div className="flex flex-wrap w-full justify-center items-center py-1 md:py-2">
             <motion.span
               initial={{ x: "-20px", opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
@@ -349,7 +427,6 @@ const Hero = () => {
               high-performance
             </motion.span>
 
-            {/* Right half coming from right */}
             <motion.span
               initial={{ x: "20px", opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}

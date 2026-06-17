@@ -89,7 +89,7 @@ const Experience = () => {
   };
 
   return (
-    <section id='experience' className="relative z-40 bg-black text-white py-28 px-6 md:px-12 lg:px-20 min-h-screen flex flex-col justify-start items-center overflow-hidden shadow-[0_-30px_60px_rgba(0,0,0,1)]">
+    <section id='experience' className="relative z-40 bg-black text-white py-20 md:py-28 px-4 md:px-12 lg:px-20 min-h-screen flex flex-col justify-start items-center overflow-hidden shadow-[0_-30px_60px_rgba(0,0,0,1)]">
       
       {/* Section Header */}
       <motion.div 
@@ -97,7 +97,7 @@ const Experience = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-16"
+        className="text-center mb-12 md:mb-16"
       >
         <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
           My <span className="text-blue-500 italic">Experience</span>
@@ -106,17 +106,17 @@ const Experience = () => {
       </motion.div>
 
       {/*  FIXED: Seamless Capsule Navigation Tabs matching Hero's liquid layout */}
-      <div className="flex bg-[#0d0d0f] border border-white/5 p-2 rounded-full gap-2 mb-20 shadow-2xl max-w-full relative z-50">
+      <div className="flex bg-[#0d0d0f] border border-white/5 p-1 md:p-2 rounded-full gap-1 md:gap-2 mb-12 md:mb-20 shadow-2xl max-w-full relative z-50">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           return (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="relative overflow-hidden group px-7 py-3 rounded-full border border-transparent hover:border-blue-500/20 text-sm md:text-base font-bold uppercase tracking-widest text-xs transition-all duration-300 outline-none select-none"
+              className="relative overflow-hidden group px-4 py-2.5 md:px-7 md:py-3 rounded-full border border-transparent hover:border-blue-500/20 text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-widest transition-all duration-300 outline-none select-none"
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
-              {/* Liquid Hover Wave Fill Effect (Matches Hero Resume Download logic) */}
+              {/* Liquid Hover Wave Fill Effect */}
               <span className="absolute inset-x-0 bottom-0 h-0 bg-blue-500 transition-all duration-300 ease-out group-hover:h-full -z-10" />
 
               {/* Active Tab Background Layer */}
@@ -147,19 +147,19 @@ const Experience = () => {
               const isEven = index % 2 === 0;
               return (
                 <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: isEven ? -80 : 80 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: isEven ? -80 : 80 }}
-                  transition={{ type: 'spring', stiffness: 100, damping: 18, mass: 0.8 }}
-                  whileHover={{ y: -6 }}
-                  className="relative bg-zinc-900/20 backdrop-blur-md border border-zinc-900 hover:border-blue-500/40 p-6 md:p-8 rounded-2xl flex flex-col justify-between transition-all duration-300 shadow-xl group overflow-hidden"
+                   key={index}
+                   initial={{ opacity: 0, x: isEven ? -80 : 80 }}
+                   animate={{ opacity: 1, x: 0 }}
+                   exit={{ opacity: 0, x: isEven ? -80 : 80 }}
+                   transition={{ type: 'spring', stiffness: 100, damping: 18, mass: 0.8 }}
+                   whileHover={{ y: -6 }}
+                   className="relative bg-zinc-900/20 backdrop-blur-md border border-zinc-900 hover:border-blue-500/40 p-6 md:p-8 rounded-2xl flex flex-col justify-between transition-all duration-300 shadow-xl group overflow-hidden"
                 >
                   <div className="absolute -right-20 -top-20 w-40 h-40 bg-blue-600/5 rounded-full blur-3xl group-hover:bg-blue-600/15 transition-all duration-500 pointer-events-none" />
                   
                   <div>
                     {/* Upper Header Row */}
-                    <div className="flex items-start justify-between gap-4 mb-6 border-b border-zinc-800/60 pb-5">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6 border-b border-zinc-800/60 pb-5">
                       <div className="flex items-center gap-4">
                         {/* Img Box Shell Container */}
                         <div className="w-12 h-12 rounded-xl border border-zinc-800 bg-black flex items-center justify-center overflow-hidden p-1 group-hover:border-blue-500/30 transition-colors duration-300 shrink-0 shadow-lg">
@@ -179,7 +179,7 @@ const Experience = () => {
                           </p>
                         </div>
                       </div>
-                      <span className="text-[11px] font-semibold tracking-wider px-3 py-1 bg-zinc-900 text-zinc-400 border border-zinc-800 rounded-full whitespace-nowrap mt-1">
+                      <span className="text-[10px] md:text-[11px] font-semibold tracking-wider px-3 py-1 bg-zinc-900 text-zinc-400 border border-zinc-800 rounded-full whitespace-nowrap self-start sm:self-auto mt-1">
                         {item.duration}
                       </span>
                     </div>

@@ -61,15 +61,22 @@ export default function About() {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    let ctx = gsap.context(() => {
+    let mm = gsap.matchMedia();
+
+    mm.add({
+      isDesktop: "(min-width: 1024px)",
+      isMobile: "(max-width: 1023px)"
+    }, (context) => {
+      const { isDesktop } = context.conditions;
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top top",
-          end: "+=200%", // Extra scroll distance for smoother animation
-          pin: true,
+          start: "top top", // FIXED: Always start at the top so it doesn't trigger early on mobile
+          end: isDesktop ? "+=200%" : "+=150%", // Slightly shorter scroll duration on mobile
+          pin: true, // FIXED: Enable pinning on all devices
           scrub: 1.5,
-          pinSpacing: true,
+          pinSpacing: true, // FIXED: Ensure proper spacing when pinned
           preventOverlaps: true,
           fastScrollEnd: true
         }
@@ -124,7 +131,7 @@ export default function About() {
 
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   const text1 = "Transforming ideas into interactive reality.";
@@ -133,7 +140,8 @@ export default function About() {
   return (
     <section
       ref={containerRef}
-      className="relative z-[50] h-screen w-full bg-[#030303] flex items-center justify-center overflow-hidden px-6 md:px-12 lg:px-24 rounded-t-[40px] md:rounded-t-[80px] shadow-[0_-30px_100px_rgba(0,0,0,0.9)] border-t border-white/5"
+      // FIXED: Changed h-auto to min-h-[100svh] so it fills the mobile screen nicely while pinned
+      className="relative z-[50] min-h-[100svh] py-24 lg:py-0 w-full bg-[#030303] flex items-center justify-center overflow-hidden px-6 md:px-12 lg:px-24 rounded-t-[40px] md:rounded-t-[80px] shadow-[0_-30px_100px_rgba(0,0,0,0.9)] border-t border-white/5"
     >
       {/* 3D Background */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-50 rounded-t-[40px] md:rounded-t-[80px] overflow-hidden">
@@ -159,20 +167,20 @@ export default function About() {
           </div>
 
           {/* Fixed Height Wrapper to prevent layout shift */}
-          <div className="relative w-full h-[200px] md:h-[280px]">
+          <div className="relative w-full h-[140px] sm:h-[180px] md:h-[280px]">
             {/* Phase 1 Text */}
-            <div className="absolute top-0 left-0 w-full text-5xl md:text-6xl lg:text-[70px] font-black tracking-tighter leading-[1] text-white">
+            <div className="absolute top-0 left-0 w-full text-4xl sm:text-5xl md:text-6xl lg:text-[70px] font-black tracking-tighter leading-[1] text-white">
               {splitText(text1, "char1")}
             </div>
             {/* Phase 2 Text */}
-            <div className="absolute top-0 left-0 w-full text-5xl md:text-6xl lg:text-[70px] font-black tracking-tighter leading-[1] text-blue-500">
+            <div className="absolute top-0 left-0 w-full text-4xl sm:text-5xl md:text-6xl lg:text-[70px] font-black tracking-tighter leading-[1] text-blue-500">
               {splitText(text2, "char2")}
             </div>
           </div>
         </div>
 
         {/* RIGHT SIDE: Perfect Absolute Crossfade */}
-        <div className="relative w-full max-w-lg h-[300px] md:h-[350px]">
+        <div className="relative w-full max-w-lg h-[240px] sm:h-[280px] md:h-[350px]">
 
           {/* CONTENT PHASE 1: Always visible initially */}
           <div className="content-phase-1 absolute inset-0 flex flex-col justify-center space-y-6">

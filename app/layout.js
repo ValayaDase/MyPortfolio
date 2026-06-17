@@ -9,6 +9,12 @@ import Navbar from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
@@ -20,6 +26,10 @@ export default function RootLayout({ children }) {
   // GSAP animation poori khatam ho jayegi
   const handleLoadingComplete = () => {
     setIsLoading(false);
+    setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+      ScrollTrigger.refresh();
+    }, 150);
   };
 
   return (
